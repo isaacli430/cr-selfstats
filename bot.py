@@ -99,10 +99,15 @@ async def profile(ctx, tag=profile_id):
         to_level_up = "(Max Level)"
     else:
         to_level_up = f"({data['experience']['xp']}/{data['experience']['xpRequiredForLevelUp']})"
-    em.add_field(name="Level", value=f"{data['experience']['level']} {to_level_up}", inline=True)
-    em.add_field(name="Arena", value=f"**{data['arena']['name']}**", inline=True)
     em.add_field(name="Trophies", value=str(data['trophies']), inline=True)
     em.add_field(name="Personal Best", value=str(data['stats']['maxTrophies']), inline=True)
+    em.add_field(name="Level", value=f"{data['experience']['level']} {to_level_up}", inline=True)
+    if data['globalRank'] == None:
+        global_ranking = "**N/A**"
+    else:
+        global_ranking = data['globalRank']
+    em.add_field(name="Global Rank", value=global_ranking)
+    em.add_field(name="Arena", value=f"**{data['arena']['name']}**", inline=True)
     em.add_field(name="Favorite Card", value=f"**{data['stats']['favoriteCard'].replace('_', ' ').title()}**", inline=True)
     em.add_field(name="Clan Info", value=f"**{data['clan']['name']}\n(#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
     em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
