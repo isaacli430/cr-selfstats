@@ -103,13 +103,13 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Arena", value=data['arena']['name'], inline=True)
     em.add_field(name="Clan Info", value=f"**{data['clan']['name']} (#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
     em.add_field(name="Favorite Card", value=data['stats']['favoriteCard'].replace('_', ' ').title())
+    em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
+    em.add_field(name="Losses", value=f"{data['games']['losses']}", inline=True)
+    em.add_field(name="Draws", value=f"{data['games']['draws']}", inline=True)
     deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][0]['level']}"
     for i in range(1,8):
         deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][i]['level']}"
     em.add_field(name="Deck", value=deck, inline=True)
-    em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
-    em.add_field(name="Losses", value=f"{data['games']['losses']}", inline=True)
-    em.add_field(name="Draws", value=f"{data['games']['draws']}", inline=True)
 
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     await ctx.send(embed=em)
