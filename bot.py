@@ -83,7 +83,7 @@ async def on_ready():
 async def profile(ctx, tag=profile_id):
     tag = tag.replace("#", "")
     if tag == "":
-        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add PLAYER_ID to your config vars in Heroku.")
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
     url = f"http://api.cr-api.com/profile/{tag}"
     async with aiohttp.ClientSession() as session:
