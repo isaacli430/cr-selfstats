@@ -115,7 +115,7 @@ async def profile(ctx, tag=profile_id):
     else:
         ranking = data['previousSeasons'][0]['seasonEndGlobalRank'] + "trophies"
     em.add_field(name="Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']}\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']}\n**Global Rank:** {ranking}", inline=True)
-    em.add_field(name="Upcoming Chests", value=f"**Super Magical Chest:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary Chest:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic Chest:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}", inline=True)
+    em.add_field(name="Upcoming Chests", value=f"**Super Magical:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}", inline=True)
     offers = f"**Legendary Chest** - {data['shopOffers']['legendary']} days\n**Epic Chest** - {data['shopOffers']['epic']} days"
     if data['shopOffers']['arena'] != None:
         offers += f"\n**Arena Pack** - {data['shopOffers']['arena']} days"
