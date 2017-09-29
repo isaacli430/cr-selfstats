@@ -109,10 +109,10 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Global Rank", value=global_ranking)
     em.add_field(name="Arena", value=f"**{data['arena']['name']}**", inline=True)
     em.add_field(name="Favorite Card", value=f"**{data['stats']['favoriteCard'].replace('_', ' ').title()}**", inline=True)
-    em.add_field(name="Clan Info", value=f"**{data['clan']['name']}\n(#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
     em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
     em.add_field(name="Losses", value=f"{data['games']['losses']}", inline=True)
     em.add_field(name="Draws", value=f"{data['games']['draws']}", inline=True)
+    em.add_field(name="Clan Info", value=f"**{data['clan']['name']}\n(#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
 
 
     if data['previousSeasons'][0]['seasonEndGlobalRank'] == None:
