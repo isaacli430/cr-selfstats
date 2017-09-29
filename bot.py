@@ -29,6 +29,7 @@ import os
 import asyncio
 import json
 import aiohttp
+import embedtobox
 
 def run_setup():
     print("Let's set up the bot now:\n")
@@ -131,7 +132,12 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Shop Offers", value=offers, inline=True)
 
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
-    await ctx.send(embed=em)
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
 
 try:
     bot.run(token.strip('\"'), bot=False)
