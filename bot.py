@@ -104,7 +104,7 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Trophies", value=str(data['trophies']), inline=True)
     em.add_field(name="Personal Best", value=str(data['stats']['maxTrophies']), inline=True)
     em.add_field(name="Favorite Card", value=f"**{data['stats']['favoriteCard'].replace('_', ' ').title()}**", inline=True)
-    em.add_field(name="Clan Info", value=f"**{data['clan']['name']} (#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
+    em.add_field(name="Clan Info", value=f"**{data['clan']['name']}\n(#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
     em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
     em.add_field(name="Losses", value=f"{data['games']['losses']}", inline=True)
     em.add_field(name="Draws", value=f"{data['games']['draws']}", inline=True)
