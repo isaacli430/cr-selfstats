@@ -47,8 +47,8 @@ def run_setup():
     with open("data/config.json", "w") as f:
         f.write(json.dumps(config_data, indent=4))
 
-if os.environ.get("TOKEN") != None:
-    token = os.environ.get("TOKEN")
+if "TOKEN" in os.eviron:
+    token = os.environ["TOKEN"]
     heroku = True
 else:
     with open("data/config.json") as f:
@@ -60,7 +60,7 @@ else:
             heroku = False
 
 if heroku == True:
-    profile_id = os.environ.get('PROFILE_ID')
+    profile_id = os.environ['PROFILE_ID']
 else:
     with open("data/config.json") as f:
         profile_id = json.load(f).get('PROFILE_ID')
@@ -68,7 +68,7 @@ else:
 async def prefix(bot, message):
     global heroku
     if heroku == True:
-        return os.environ.get("PREFIX")
+        return os.environ["PREFIX"] or "st."
     else:
         with open("data/config.json") as f:
             return json.load(f).get('PREFIX') or "st."
