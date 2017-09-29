@@ -109,7 +109,7 @@ async def profile(ctx, tag=profile_id):
     offers = f"**Legendary Chest** - {data['shopOffers']['legendary']} days\n**Epic Chest** - {data['shopOffers']['epic']} days"
     if data['shopOffers']['arena'] != None:
         offers += f"\n**Arena Pack** - {data['shopOffers']['arena']} days"
-    em.add_field
+    em.add_field(name="Shop Offers", value=offers)
     deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][0]['level']}"
     for i in range(1,8):
         deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][i]['level']}"
