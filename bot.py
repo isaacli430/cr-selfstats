@@ -82,7 +82,6 @@ async def on_ready():
 @bot.command(aliases=['stats', 'p', 's'])
 async def profile(ctx, tag=profile_id):
     tag = tag.replace("#", "")
-    print(tag)
     if tag == None:
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add PLAYER_ID to your config vars in Heroku.")
         return await ctx.send(embed=em)
