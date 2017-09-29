@@ -59,7 +59,7 @@ else:
             token = config.get('TOKEN').strip('\"')
             heroku = False
 
-if heroku == True:
+if "PREFIX" in os.environ:
     profile_id = os.environ['PROFILE_ID']
 else:
     with open("data/config.json") as f:
