@@ -68,7 +68,7 @@ else:
 async def prefix(bot, message):
     global heroku
     if heroku == True:
-        return os.environ("PREFIX")
+        return os.environ.get("PREFIX")
     else:
         with open("data/config.json") as f:
             return json.load(f).get('PREFIX') or "st."
