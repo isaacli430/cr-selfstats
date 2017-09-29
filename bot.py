@@ -114,7 +114,7 @@ async def profile(ctx, tag=profile_id):
         ranking = "N/A"
     else:
         ranking = data['previousSeasons'][0]['seasonEndGlobalRank'] + "trophies"
-    em.add_field(name="Previous Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']} trophies\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']} trophies\n**Season Finish Global Rank:** {ranking}", inline=True)
+    em.add_field(name="Previous Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']} trophies\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']} trophies\n**Global Rank:** {ranking}", inline=True)
     em.add_field(name="Upcoming Chests", value=f"**Super Magical Chest:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary Chest:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic Chest:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}", inline=True)
     offers = f"**Legendary Chest** - {data['shopOffers']['legendary']} days\n**Epic Chest** - {data['shopOffers']['epic']} days"
     if data['shopOffers']['arena'] != None:
