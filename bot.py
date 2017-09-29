@@ -92,25 +92,26 @@ async def profile(ctx, tag=profile_id):
     if data.get("error"):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
         return await ctx.send(embed=em)
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"#{data['tag']}")
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"**#{data['tag']}**")
     em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badgeUrl']}")
     em.set_thumbnail(url=f"http://api.cr-api.com{data['arena']['imageURL']}")
     if data['experience']['xpRequiredForLevelUp'] == "Max":
         to_level_up = "(Max Level)"
     else:
         to_level_up = f"({data['experience']['xp']}/{data['experience']['xpRequiredForLevelUp']})"
-    em.add_field(name="Level", value=f"**{data['experience']['level']}** {to_level_up}", inline=True)
+    em.add_field(name="Level", value=f"{data['experience']['level']} {to_level_up}", inline=True)
+    em.add_field(name="Arena", value=f"**{data['arena']['name']}**", inline=True)
     em.add_field(name="Trophies", value=str(data['trophies']), inline=True)
     em.add_field(name="Personal Best", value=str(data['stats']['maxTrophies']), inline=True)
-    em.add_field(name="Arena", value=data['arena']['name'], inline=True)
     em.add_field(name="Clan Info", value=f"**{data['clan']['name']} (#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
-    em.add_field(name="Favorite Card", value=data['stats']['favoriteCard'].replace('_', ' ').title(), inline=True)
+    em.add_field(name="Favorite Card", value=f"**{data['stats']['favoriteCard'].replace('_', ' ').title()}**", inline=True)
     em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
     em.add_field(name="Losses", value=f"{data['games']['losses']}", inline=True)
     em.add_field(name="Draws", value=f"{data['games']['draws']}", inline=True)
-    em.add_field(name="Upcoming Chests", value=f"**Super Magical Chest:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary Chest:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic Chest:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}")
 
-    
+
+    em.add_field(name="Previous Season Results", value="")
+    em.add_field(name="Upcoming Chests", value=f"**Super Magical Chest:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary Chest:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic Chest:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}")
     offers = f"**Legendary Chest** - {data['shopOffers']['legendary']} days\n**Epic Chest** - {data['shopOffers']['epic']} days"
     if data['shopOffers']['arena'] != None:
         offers += f"\n**Arena Pack** - {data['shopOffers']['arena']} days"
