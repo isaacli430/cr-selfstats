@@ -47,7 +47,7 @@ def run_setup():
     with open("data/config.json", "w") as f:
         f.write(json.dumps(config_data, indent=4))
 
-if "TOKEN" in os.eviron:
+if "TOKEN" in os.environ:
     token = os.environ["TOKEN"]
     heroku = True
 else:
