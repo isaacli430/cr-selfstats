@@ -103,8 +103,8 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Arena", value=f"**{data['arena']['name']}**", inline=True)
     em.add_field(name="Trophies", value=str(data['trophies']), inline=True)
     em.add_field(name="Personal Best", value=str(data['stats']['maxTrophies']), inline=True)
-    em.add_field(name="Clan Info", value=f"**{data['clan']['name']} (#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
     em.add_field(name="Favorite Card", value=f"**{data['stats']['favoriteCard'].replace('_', ' ').title()}**", inline=True)
+    em.add_field(name="Clan Info", value=f"**{data['clan']['name']} (#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
     em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
     em.add_field(name="Losses", value=f"{data['games']['losses']}", inline=True)
     em.add_field(name="Draws", value=f"{data['games']['draws']}", inline=True)
@@ -114,12 +114,12 @@ async def profile(ctx, tag=profile_id):
         ranking = "N/A"
     else:
         ranking = data['previousSeasons'][0]['seasonEndGlobalRank']
-    em.add_field(name="Previous Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']} trophies\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']}\n**Season Finish Global Rank:** {ranking}")
-    em.add_field(name="Upcoming Chests", value=f"**Super Magical Chest:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary Chest:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic Chest:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}")
+    em.add_field(name="Previous Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']} trophies\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']}\n**Season Finish Global Rank:** {ranking}", inline=True)
+    em.add_field(name="Upcoming Chests", value=f"**Super Magical Chest:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary Chest:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic Chest:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}", inline=True)
     offers = f"**Legendary Chest** - {data['shopOffers']['legendary']} days\n**Epic Chest** - {data['shopOffers']['epic']} days"
     if data['shopOffers']['arena'] != None:
         offers += f"\n**Arena Pack** - {data['shopOffers']['arena']} days"
-    em.add_field(name="Shop Offers", value=offers)
+    em.add_field(name="Shop Offers", value=offers, inline=True)
     deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][0]['level']}"
     for i in range(1,8):
         deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][i]['level']}"
