@@ -165,8 +165,8 @@ async def clan(ctx, tag=profile_id):
         return await ctx.send(embed=em)
 
     em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"**#{tag}**")
-    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badgeUrl']}")
-    em.set_thumbnail(url=f"http://api.cr-api.com{data['badgeUrl']}")
+    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge_url']}")
+    em.set_thumbnail(url=f"http://api.cr-api.com{data['badge_url']}")
 
     await ctx.send(embed=em)
 
