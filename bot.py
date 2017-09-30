@@ -148,9 +148,9 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Battle Deck", value=deck, inline=True)
     offers = ""
     if data['shopOffers']['legendary'] > 0:
-        offers += f"**Legendary Chest -** {data['shopOffers']['legendary'])} days\n"
+        offers += f"**Legendary Chest -** {data['shopOffers']['legendary']} days\n"
     if data['shopOffers']['epic'] > 0:
-        offers += f"**Epic Chest -** {data['shopOffers']['epic'])} days\n"
+        offers += f"**Epic Chest -** {data['shopOffers']['epic']} days\n"
     if data['shopOffers']['arena'] != None:
         offers += f"**Arena Pack -** {data['shopOffers']['arena']} days"
     if offers == "":
