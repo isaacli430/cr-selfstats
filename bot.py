@@ -146,9 +146,15 @@ async def profile(ctx, tag=profile_id):
     for i in range(1,len(data['currentDeck'])):
         deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][i]['level']}"
     em.add_field(name="Battle Deck", value=deck, inline=True)
-    offers = f"**Legendary Chest** - {data['shopOffers']['legendary']} days\n**Epic Chest** - {data['shopOffers']['epic']} days"
+    offers = ""
+    if data['shopOffers']['legendary'] > 0:
+        offers += f"**Legendary Chest -** {data['shopOffers']['legendary'])} days\n"
+    if data['shopOffers']['epic'] > 0:
+        offers += f"**Epic Chest -** {data['shopOffers']['epic'])} days\n"
     if data['shopOffers']['arena'] != None:
-        offers += f"\n**Arena Pack** - {data['shopOffers']['arena']} days"
+        offers += f"**Arena Pack -** {data['shopOffers']['arena']} days"
+    if offers == "":
+        offers == "None"
     em.add_field(name="Shop Offers", value=offers, inline=True)
 
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
