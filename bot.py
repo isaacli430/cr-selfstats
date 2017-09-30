@@ -97,7 +97,7 @@ async def profile(ctx, tag=profile_id):
     try:
         em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badgeUrl']}")
     except:
-        em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://github.com/kwugfighter/data/clanless.png")
+        em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/clanless.png")
     em.set_thumbnail(url=f"http://api.cr-api.com{data['arena']['imageURL']}")
     if data['experience']['xpRequiredForLevelUp'] == "Max":
         to_level_up = "(Max Level)"
