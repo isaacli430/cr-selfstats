@@ -94,7 +94,10 @@ async def profile(ctx, tag=profile_id):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
         return await ctx.send(embed=em)
     em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"**#{data['tag']}**")
-    em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badgeUrl']}")
+    try:
+        em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badgeUrl']}")
+    except:
+        em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://github.com/kwugfighter/data/clanless.png")
     em.set_thumbnail(url=f"http://api.cr-api.com{data['arena']['imageURL']}")
     if data['experience']['xpRequiredForLevelUp'] == "Max":
         to_level_up = "(Max Level)"
@@ -113,7 +116,10 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
     em.add_field(name="Losses", value=f"{data['games']['losses']}", inline=True)
     em.add_field(name="Draws", value=f"{data['games']['draws']}", inline=True)
-    em.add_field(name="Clan Info", value=f"**{data['clan']['name']}\n(#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
+    try:
+        em.add_field(name="Clan Info", value=f"**{data['clan']['name']}\n(#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
+    except:
+        em.add_field(name="Clan Info", value=f"**N/A**", inline=True)
 
 
     if data['previousSeasons'][0]['seasonEndGlobalRank'] == None:
@@ -140,28 +146,37 @@ async def profile(ctx, tag=profile_id):
             await ctx.send(page)
 
 @bot.command()
-async def clan(ctx, tag=profile_id):
+async def clan(ctx, tag=profile_id, tag_type="player"):
     tag = tag.replace("#", "")
     if tag == "":
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
-    url = f"http://api.cr-api.com/profile/{tag}"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as d:
-            data = await d.json()
-    if not data.get("error"):
+    if tag_type == "player":
+        url = f"http://api.cr-api.com/profile/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
+        if data.get("error"):
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
+            return await ctx.send(embed=em)
         tag = data['clan']['tag']
+        if tag == None:
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Player is not in a clan.")
+            return await ctx.send(embed=em)
         url = f"http://api.cr-api.com/clan/{tag}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as d:
                 data = await d.json()
+    elif tag_type == "clan":
+        url = f"http://api.cr-api.com/clan/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()      
+        if data.get("error"):
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
+            return await ctx.send(embed=em) 
     else:
-        url = f"http://api.cr-api.com/clan/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()
-    if data.get("error"):
-        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` or `clan` for the tag type.")
         return await ctx.send(embed=em)
 
     em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description=f"{data['description']}")
