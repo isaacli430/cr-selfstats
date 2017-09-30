@@ -142,17 +142,17 @@ async def profile(ctx, tag=profile_id):
     except:
         epic = "N/A"
     em.add_field(name="Upcoming Chests", value=f"**Super Magical:** {supermag}\n**Legendary:** {leggie}\n**Epic:** {epic}", inline=True)
-    deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][0]['level']}"
+    deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}:** Lvl {data['currentDeck'][0]['level']}"
     for i in range(1,len(data['currentDeck'])):
-        deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][i]['level']}"
+        deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}:** Lvl {data['currentDeck'][i]['level']}"
     em.add_field(name="Battle Deck", value=deck, inline=True)
     offers = ""
     if data['shopOffers']['legendary'] > 0:
-        offers += f"**Legendary Chest -** {data['shopOffers']['legendary']} days\n"
+        offers += f"**Legendary Chest:** {data['shopOffers']['legendary']} days\n"
     if data['shopOffers']['epic'] > 0:
-        offers += f"**Epic Chest -** {data['shopOffers']['epic']} days\n"
+        offers += f"**Epic Chest:** {data['shopOffers']['epic']} days\n"
     if data['shopOffers']['arena'] != None:
-        offers += f"**Arena Pack -** {data['shopOffers']['arena']} days"
+        offers += f"**Arena Pack:** {data['shopOffers']['arena']} days"
     if offers == "":
         offers = "None"
     em.add_field(name="Shop Offers", value=offers, inline=True)
