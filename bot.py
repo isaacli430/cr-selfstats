@@ -121,12 +121,14 @@ async def profile(ctx, tag=profile_id):
     except:
         em.add_field(name="Clan Info", value=f"**N/A**", inline=True)
 
-
-    if data['previousSeasons'][0]['seasonEndGlobalRank'] == None:
-        ranking = "N/A"
-    else:
-        ranking = data['previousSeasons'][0]['seasonEndGlobalRank'] + "trophies"
-    em.add_field(name="Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']}\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']}\n**Global Rank:** {ranking}", inline=True)
+    try:
+        if data['previousSeasons'][0]['seasonEndGlobalRank'] == None:
+            ranking = "N/A"
+        else:
+            ranking = data['previousSeasons'][0]['seasonEndGlobalRank'] + "trophies"
+        em.add_field(name="Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']}\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']}\n**Global Rank:** {ranking}", inline=True)
+    except:
+        em.add_field(name="Season Results", value=f"**Season Finish:** N/A\n**Season Highest:** N/A\n**Global Rank:** N/A", inline=True)
     em.add_field(name="Upcoming Chests", value=f"**Super Magical:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}", inline=True)
     deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][0]['level']}"
     for i in range(1,8):
