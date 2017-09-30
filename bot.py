@@ -154,7 +154,7 @@ async def profile(ctx, tag=profile_id):
     if data['shopOffers']['arena'] != None:
         offers += f"**Arena Pack -** {data['shopOffers']['arena']} days"
     if offers == "":
-        offers == "None"
+        offers = "None"
     em.add_field(name="Shop Offers", value=offers, inline=True)
 
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
