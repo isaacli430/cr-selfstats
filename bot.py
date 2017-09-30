@@ -167,7 +167,8 @@ async def clan(ctx, tag=profile_id):
     em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description=f"{data['description']}")
     em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge_url']}")
     em.set_thumbnail(url=f"http://api.cr-api.com{data['badge_url']}")
-    em.add_field(name="Trophies", value=str(data['score']))
+    em.add_field(name="Trophies", value=str(data['score']), inline=True)
+    em.add_field(name="Type", value=f"**{data['typeName']}**", inline=True)
 
     await ctx.send(embed=em)
 
