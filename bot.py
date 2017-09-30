@@ -143,7 +143,7 @@ async def profile(ctx, tag=profile_id):
         epic = "N/A"
     em.add_field(name="Upcoming Chests", value=f"**Super Magical:** {supermag}\n**Legendary:** {leggie}\n**Epic:** {epic}", inline=True)
     deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][0]['level']}"
-    for i in range(1,len(currentDeck)):
+    for i in range(1,len(data['currentDeck'])):
         deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][i]['level']}"
     em.add_field(name="Battle Deck", value=deck, inline=True)
     offers = f"**Legendary Chest** - {data['shopOffers']['legendary']} days\n**Epic Chest** - {data['shopOffers']['epic']} days"
