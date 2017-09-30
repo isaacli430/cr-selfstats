@@ -129,9 +129,21 @@ async def profile(ctx, tag=profile_id):
         em.add_field(name="Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']}\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']}\n**Global Rank:** {ranking}", inline=True)
     except:
         em.add_field(name="Season Results", value=f"**Season Finish:** N/A\n**Season Highest:** N/A\n**Global Rank:** N/A", inline=True)
-    em.add_field(name="Upcoming Chests", value=f"**Super Magical:** {data['chestCycle']['superMagicalPos']-data['chestCycle']['position']}\n**Legendary:** {data['chestCycle']['legendaryPos']-data['chestCycle']['position']}\n**Epic:** {data['chestCycle']['epicPos']-data['chestCycle']['position']}", inline=True)
+    try:
+        supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']
+    except:
+        supermag = "N/A"
+    try:
+        leggie = data['chestCycle']['legendaryPos']-data['chestCycle']['position']
+    except:
+        leggie = "N/A"
+    try:
+        epic = data['chestCycle']['epicPos']-data['chestCycle']['position']
+    except:
+        epic = "N/A"
+    em.add_field(name="Upcoming Chests", value=f"**Super Magical:** {supermag}\n**Legendary:** {leggie}\n**Epic:** {epic}", inline=True)
     deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][0]['level']}"
-    for i in range(1,8):
+    for i in range(1,len(currentDeck)):
         deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}** - Lvl {data['currentDeck'][i]['level']}"
     em.add_field(name="Battle Deck", value=deck, inline=True)
     offers = f"**Legendary Chest** - {data['shopOffers']['legendary']} days\n**Epic Chest** - {data['shopOffers']['epic']} days"
