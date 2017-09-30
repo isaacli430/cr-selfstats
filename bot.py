@@ -169,6 +169,8 @@ async def clan(ctx, tag=profile_id):
     em.set_thumbnail(url=f"http://api.cr-api.com{data['badge_url']}")
     em.add_field(name="Trophies", value=str(data['score']), inline=True)
     em.add_field(name="Type", value=f"**{data['typeName']}**", inline=True)
+    em.add_field(name="Member Count", value=f"{data['memberCount']}/50")
+    em.add_field(name="Requirement", value=str(data['requiredScore']))
 
     await ctx.send(embed=em)
 
