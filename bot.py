@@ -182,7 +182,7 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
         if data.get("error"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
             return await ctx.send(embed=em)
-        if data['clan']['tag'] == None:
+        if data['clan'] == None:
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Player is not in a clan.")
             return await ctx.send(embed=em)
         tag = data['clan']['tag']
