@@ -139,6 +139,36 @@ async def profile(ctx, tag=profile_id):
         for page in pages:
             await ctx.send(page)
 
+@bot.command()
+async def clan(ctx, tag=profile_id):
+    tag = tag.replace("#", "")
+    if tag == "":
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
+        return await ctx.send(embed=em)
+    url = f"http://api.cr-api.com/profile/{tag}"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as d:
+            data = await d.json()
+    if not data.get("error"):
+        tag = data['clan']['tag']
+        url = f"http://api.cr-api.com/clan/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
+    else:
+        url = f"http://api.cr-api.com/clan/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
+    if data.get("error"):
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
+        return await ctx.send(embed=em)
+
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"**#{tag}**")
+    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badgeUrl']}")
+    em.set_thumbnail(url=f"http://api.cr-api.com{data['badgeUrl']}")
+
+
 try:
     bot.run(token.strip('\"'), bot=False)
 except Exception as e:
