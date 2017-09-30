@@ -166,11 +166,14 @@ async def profile(ctx, tag=profile_id):
             await ctx.send(page)
 
 @bot.command()
-async def clan(ctx, tag=profile_id, tag_type="player"):
+async def clan(ctx, tag=profile_id, tag_type="clan"):
     tag = tag.replace("#", "")
     if tag == "":
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
+    global profile_id
+    if tag == profile_id:
+        tag_type = "player"
     if tag_type == "player":
         url = f"http://api.cr-api.com/profile/{tag}"
         async with aiohttp.ClientSession() as session:
@@ -179,10 +182,10 @@ async def clan(ctx, tag=profile_id, tag_type="player"):
         if data.get("error"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
             return await ctx.send(embed=em)
-        tag = data['clan']['tag']
-        if tag == None:
+        if data['clan']['tag'] == None:
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Player is not in a clan.")
             return await ctx.send(embed=em)
+        tag = data['clan']['tag']
         url = f"http://api.cr-api.com/clan/{tag}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as d:
