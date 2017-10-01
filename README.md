@@ -1,6 +1,7 @@
 # Clash Royale SelfStats
 _A selfbot dedicated to getting your CR stats!_
 
+# Command Help
 This is a very simple selfbot that only has 3 commands:
 ```
 profile [Player ID, defaults to your ID if left empty]
