@@ -169,13 +169,13 @@ async def profile(ctx, tag=profile_id):
 
 @bot.command()
 async def clan(ctx, tag=profile_id, tag_type="clan"):
+    global profile_id
+    if tag == profile_id:
+        tag_type = "player"
     tag = tag.replace("#", "")
     if tag == "":
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
-    global profile_id
-    if tag == profile_id:
-        tag_type = "player"
     if tag_type == "player":
         url = f"http://api.cr-api.com/profile/{tag}"
         async with aiohttp.ClientSession() as session:
