@@ -199,7 +199,7 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
             return await ctx.send(embed=em) 
     else:
-        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` or `clan` for the tag type.")
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` for the tag type if necessary.")
         return await ctx.send(embed=em)
 
     em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description=f"{data['description']}")
@@ -207,8 +207,17 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
     em.set_thumbnail(url=f"http://api.cr-api.com{data['badge_url']}")
     em.add_field(name="Trophies", value=str(data['score']), inline=True)
     em.add_field(name="Type", value=f"**{data['typeName']}**", inline=True)
-    em.add_field(name="Member Count", value=f"{data['memberCount']}/50")
-    em.add_field(name="Requirement", value=str(data['requiredScore']))
+    em.add_field(name="Member Count", value=f"{data['memberCount']}/50", inline=True)
+    em.add_field(name="Requirement", value=str(data['requiredScore']), inline=True)
+    em.add_field(name="Donations", value=str(data['donations']), inline=True)
+    em.add_field(name="Region", value=f"**{data['region']['name']}**")
+    players = []
+    for i in range(len(data['members'])):
+        if i <= 3:
+            players.append(f"**{data['members'][i]['name']}**\n**(#{data['members'][i]['tag']})**\n{data['members'][i]['roleName']}")
+    em.add_field(name="Top 3 Players", value="\n\n".join(players))
+    
+    em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
 
     await ctx.send(embed=em)
 
