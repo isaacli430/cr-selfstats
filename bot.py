@@ -25,11 +25,13 @@ SOFTWARE.
 import discord
 from discord.ext import commands
 from formatter import EmbedHelp
+from PIL import image
 import os
 import asyncio
 import json
 import aiohttp
 import embedtobox
+import io
 
 def run_setup():
     print("Let's set up the bot now:\n")
@@ -229,6 +231,46 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
     except discord.Forbidden:
         pages = await embedtobox.etb(em)
         for page in pages:
+            await ctx.send(page)
+
+@bot.command()
+async def presence(ctx, status, *, message=None):
+    '''Change your Discord status! (Stream, Online, Idle, DND, Invisible, or clear it)'''
+    status = status.lower()
+    emb = discord.Embed(title="Presence", color=discord.Color(value=0x33ff30))
+    file = io.BytesIO()
+    if status == "online":
+        await bot.change_presence(status=discord.Status.online, game=discord.Game(name=message), afk=True)
+        color = discord.Color(value=0x43b581).to_rgb()
+    elif status == "idle":
+        await bot.change_presence(status=discord.Status.idle, game=discord.Game(name=message), afk=True)
+        color = discord.Color(value=0xfaa61a).to_rgb()
+    elif status == "dnd":
+        await bot.change_presence(status=discord.Status.dnd, game=discord.Game(name=message), afk=True)
+        color = discord.Color(value=0xf04747).to_rgb()
+    elif status == "invis" or status == "invisible":
+        await bot.change_presence(status=discord.Status.invisible, game=discord.Game(name=message), afk=True)
+        color = discord.Color(value=0x747f8d).to_rgb()
+    elif status == "stream":
+        await bot.change_presence(status=discord.Status.online, game=discord.Game(name=message,type=1,url=f'https://www.twitch.tv/{message}'), afk=True)
+        color = discord.Color(value=0x593695).to_rgb()
+    elif status == "clear":
+        await bot.change_presence(game=None, afk=True)
+        emb.description = "Presence cleared."
+        return await ctx.send(embed=emb)
+    else:
+        emb.description = "Please enter either `online`, `idle`, `dnd`, `invisible`, or `clear`."
+        return await ctx.send(embed=emb)
+
+    Image.new('RGB', (500, 500), color).save(file, format='PNG')
+    emb.description = "Your presence has been changed."
+    file.seek(0)
+    emb.set_author(name=status.title(), icon_url="attachment://color.png")
+    try:
+        await ctx.send(file=discord.File(file, 'color.png'), embed=emb)
+    except discord.HTTPException:
+        em_list = await embedtobox.etb(emb)
+        for page in em_list:
             await ctx.send(page)
 
 try:
