@@ -214,12 +214,16 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
     players = []
     for i in range(len(data['members'])):
         if i <= 2:
-            players.append(f"**{data['members'][i]['name']}**\n**(#{data['members'][i]['tag']})**\n{data['members'][i]['roleName']}")
+            players.append(f"**{data['members'][i]['name']}**\n**(#{data['members'][i]['tag']})**\n{data['members'][i]['roleName']}", inline=True)
     em.add_field(name="Top 3 Players", value="\n\n".join(players))
     
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
-
-    await ctx.send(embed=em)
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
 
 try:
     bot.run(token.strip('\"'), bot=False)
