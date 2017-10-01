@@ -217,6 +217,7 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
             players.append(f"{data['members'][i]['name']}\n(#{data['members'][i]['tag']})\n{data['members'][i]['roleName']}")
     em.add_field(name="Top 3 Players", value="\n\n".join(players), inline=True)
     contributors = sorted(data['members'], key=lambda x: x['clanChestCrowns'])
+    contributors = list(reversed(contributors))
     players = []
     for i in range(len(data['members'])):
         if i <= 2:
