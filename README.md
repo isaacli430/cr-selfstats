@@ -26,4 +26,6 @@ st.presence stream CR-SelfStats    #Now the user appears to be streaming, with t
 
 # Installation
 ## Local Installation
+Coming Soon™
 ## Heroku
+Coming Soon™
