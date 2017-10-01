@@ -93,7 +93,7 @@ async def profile(ctx, tag=profile_id):
     if data.get("error"):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
         return await ctx.send(embed=em)
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"**#{data['tag']}**")
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"#{data['tag']}")
     try:
         em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badgeUrl']}")
     except:
@@ -107,28 +107,28 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Personal Best", value=str(data['stats']['maxTrophies']), inline=True)
     em.add_field(name="Level", value=f"{data['experience']['level']} {to_level_up}", inline=True)
     if data['globalRank'] == None:
-        global_ranking = "**N/A**"
+        global_ranking = "N/A"
     else:
         global_ranking = data['globalRank']
     em.add_field(name="Global Rank", value=global_ranking)
-    em.add_field(name="Arena", value=f"**{data['arena']['name']}**", inline=True)
-    em.add_field(name="Favorite Card", value=f"**{data['stats']['favoriteCard'].replace('_', ' ').title()}**", inline=True)
-    em.add_field(name="Wins", value=f"{data['games']['wins']}", inline=True)
-    em.add_field(name="Losses", value=f"{data['games']['losses']}", inline=True)
-    em.add_field(name="Draws", value=f"{data['games']['draws']}", inline=True)
+    em.add_field(name="Arena", value=data['arena']['name'], inline=True)
+    em.add_field(name="Favorite Card", value=data['stats']['favoriteCard'].replace('_', ' ').title(), inline=True)
+    em.add_field(name="Wins", value=str(data['games']['wins']), inline=True)
+    em.add_field(name="Losses", value=str(data['games']['losses']), inline=True)
+    em.add_field(name="Draws", value=str(data['games']['draws']), inline=True)
     try:
-        em.add_field(name="Clan Info", value=f"**{data['clan']['name']}\n(#{data['clan']['tag']})**\n{data['clan']['role']}", inline=True)
+        em.add_field(name="Clan Info", value=f"{data['clan']['name']}\n(#{data['clan']['tag']})\n{data['clan']['role']}", inline=True)
     except:
-        em.add_field(name="Clan Info", value=f"**N/A**", inline=True)
+        em.add_field(name="Clan Info", value=f"N/A", inline=True)
 
     try:
         if data['previousSeasons'][0]['seasonEndGlobalRank'] == None:
             ranking = "N/A"
         else:
             ranking = data['previousSeasons'][0]['seasonEndGlobalRank'] + "trophies"
-        em.add_field(name="Season Results", value=f"**Season Finish:** {data['previousSeasons'][0]['seasonEnding']}\n**Season Highest:** {data['previousSeasons'][0]['seasonHighest']}\n**Global Rank:** {ranking}", inline=True)
+        em.add_field(name="Season Results", value=f"Season Finish: {data['previousSeasons'][0]['seasonEnding']}\nSeason Highest: {data['previousSeasons'][0]['seasonHighest']}\nGlobal Rank: {ranking}", inline=True)
     except:
-        em.add_field(name="Season Results", value=f"**Season Finish:** N/A\n**Season Highest:** N/A\n**Global Rank:** N/A", inline=True)
+        em.add_field(name="Season Results", value=f"Season Finish: N/A\nSeason Highest: N/A\nGlobal Rank: N/A", inline=True)
     try:
         supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']
     except:
@@ -141,18 +141,18 @@ async def profile(ctx, tag=profile_id):
         epic = data['chestCycle']['epicPos']-data['chestCycle']['position']
     except:
         epic = "N/A"
-    em.add_field(name="Upcoming Chests", value=f"**Super Magical:** {supermag}\n**Legendary:** {leggie}\n**Epic:** {epic}", inline=True)
-    deck = f"**{data['currentDeck'][0]['name'].replace('_', ' ').title()}:** Lvl {data['currentDeck'][0]['level']}"
+    em.add_field(name="Upcoming Chests", value=f"Super Magical: {supermag}\nLegendary: {leggie}\nEpic: {epic}", inline=True)
+    deck = f"{data['currentDeck'][0]['name'].replace('_', ' ').title()}: Lvl {data['currentDeck'][0]['level']}"
     for i in range(1,len(data['currentDeck'])):
-        deck += f"\n**{data['currentDeck'][i]['name'].replace('_', ' ').title()}:** Lvl {data['currentDeck'][i]['level']}"
+        deck += f"\n{data['currentDeck'][i]['name'].replace('_', ' ').title()}: Lvl {data['currentDeck'][i]['level']}"
     em.add_field(name="Battle Deck", value=deck, inline=True)
     offers = ""
     if data['shopOffers']['legendary'] > 0:
-        offers += f"**Legendary Chest:** {data['shopOffers']['legendary']} days\n"
+        offers += f"Legendary Chest: {data['shopOffers']['legendary']} days\n"
     if data['shopOffers']['epic'] > 0:
-        offers += f"**Epic Chest:** {data['shopOffers']['epic']} days\n"
+        offers += f"Epic Chest: {data['shopOffers']['epic']} days\n"
     if data['shopOffers']['arena'] != None:
-        offers += f"**Arena Pack:** {data['shopOffers']['arena']} days"
+        offers += f"Arena Pack: {data['shopOffers']['arena']} days"
     if offers == "":
         offers = "None"
     em.add_field(name="Shop Offers", value=offers, inline=True)
@@ -214,14 +214,14 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
     players = []
     for i in range(len(data['members'])):
         if i <= 2:
-            players.append(f"{data['members'][i]['name']}: {data['members'][i]['trophies']}\n(#{data['members'][i]['tag']})\n{data['members'][i]['roleName']}")
+            players.append(f"{data['members'][i]['name']}: {data['members'][i]['trophies']}\n(#{data['members'][i]['tag']})")
     em.add_field(name="Top 3 Players", value="\n\n".join(players), inline=True)
     contributors = sorted(data['members'], key=lambda x: x['clanChestCrowns'])
     contributors = list(reversed(contributors))
     players = []
     for i in range(len(data['members'])):
         if i <= 2:
-            players.append(f"{contributors[i]['name']}: {contributors[i]['clanChestCrowns']}\n(#{contributors[i]['tag']})\n{contributors[i]['roleName']}")
+            players.append(f"{contributors[i]['name']}: {contributors[i]['clanChestCrowns']}\n(#{contributors[i]['tag']})")
     em.add_field(name="Top CC Contributors", value='\n\n'.join(players), inline=True)
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
