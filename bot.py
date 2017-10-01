@@ -220,7 +220,7 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
     players = []
     for i in range(len(data['members'])):
         if i <= 2:
-            players.append(f"{contributors[i]['name']}\n(#{contributors[i]['tag']})\n{contributors[i]['roleName']}")
+            players.append(f"{contributors[i]['name']}: {contributors[i]['clanChestCrowns']}\n(#{contributors[i]['tag']})\n{contributors[i]['roleName']}")
     em.add_field(name="Top CC Contributors", value='\n\n'.join(players), inline=True)
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
