@@ -212,7 +212,7 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
     em.add_field(name="Donations", value=str(data['donations']), inline=True)
     em.add_field(name="Region", value=f"**{data['region']['name']}**")
     players = []
-    for i in range(len(data['members'])):
+    for i in range(len(data['members'])-1):
         if i <= 3:
             players.append(f"**{data['members'][i]['name']}**\n**(#{data['members'][i]['tag']})**\n{data['members'][i]['roleName']}")
     em.add_field(name="Top 3 Players", value="\n\n".join(players))
