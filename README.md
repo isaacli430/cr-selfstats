@@ -1,5 +1,7 @@
 # Clash Royale SelfStats
-A selfbot dedicated to getting your CR stats!
+_A selfbot dedicated to getting your CR stats!_
+
+
 # Installation
-# Setting the Bot Up
-# Heroku
+## Local Installation
+## Heroku
