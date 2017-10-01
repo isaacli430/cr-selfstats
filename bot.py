@@ -206,17 +206,22 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
     em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge_url']}")
     em.set_thumbnail(url=f"http://api.cr-api.com{data['badge_url']}")
     em.add_field(name="Trophies", value=str(data['score']), inline=True)
-    em.add_field(name="Type", value=f"**{data['typeName']}**", inline=True)
+    em.add_field(name="Type", value=data['typeName'], inline=True)
     em.add_field(name="Member Count", value=f"{data['memberCount']}/50", inline=True)
     em.add_field(name="Requirement", value=str(data['requiredScore']), inline=True)
     em.add_field(name="Donations", value=str(data['donations']), inline=True)
-    em.add_field(name="Region", value=f"**{data['region']['name']}**")
+    em.add_field(name="Region", value=data['region']['name'])
     players = []
     for i in range(len(data['members'])):
         if i <= 2:
-            players.append(f"**{data['members'][i]['name']}**\n**(#{data['members'][i]['tag']})**\n{data['members'][i]['roleName']}", inline=True)
+            players.append(f"{data['members'][i]['name']}\n(#{data['members'][i]['tag']})\n{data['members'][i]['roleName']}", inline=True)
     em.add_field(name="Top 3 Players", value="\n\n".join(players))
-    
+    contributors = sorted(data['members'], key=lambda x: x['clanChestCrowns'])
+    players = []
+    for i in range(len(data['members'])):
+        if i <= 2:
+            players.append(f"{contributors[i]['name']}\n(#{contributors[i]['tag']})\n{contributors[i]['roleName']}", inline=True)
+    em.add_field(name="Top CC Contributors", value='\n\n'.join(contributors))
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
         await ctx.send(embed=em)
