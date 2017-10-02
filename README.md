@@ -30,6 +30,6 @@ st.presence stream CR-SelfStats    #Now the user appears to be streaming, with t
 ```
 
 # Suggestions
-If you have any suggestions for commands, create an issue so I can add it.
+If you have any suggestions, create an issue so I can add it.
 # Acknowledgements
 [@Selfish](https://github.com/selfish) and [@SML](https://github.com/smlbiobot) for creating [cr-api](https://cr-api.com)
