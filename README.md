@@ -28,5 +28,8 @@ st.clan GYUGPLYL player    #Returns the stats of the player GYUGPLYL's clan
 ```
 st.presence stream CR-SelfStats    #Now the user appears to be streaming, with the status message being CR-SelfStats
 ```
+
+# Suggestions
+If you have any suggestions for commands, create an issue so I can add it.
 # Acknowledgements
 [@Selfish](https://github.com/selfish) and [@SML](https://github.com/smlbiobot) for creating [cr-api](https://cr-api.com)
