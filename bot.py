@@ -78,7 +78,7 @@ async def prefix(bot, message):
         with open("data/config.json") as f:
             return json.load(f).get('PREFIX') or "st."
 
-bot = commands.Bot(command_prefix=prefix, self_bot=True, formatter=EmbedHelp())
+bot = commands.Bot(command_prefix=prefix, self_bot=True)
 
 @bot.event
 async def on_ready():
