@@ -24,7 +24,6 @@ SOFTWARE.
 
 import discord
 from discord.ext import commands
-from formatter import EmbedHelp
 from PIL import Image
 import os
 import asyncio
