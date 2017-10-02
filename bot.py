@@ -35,7 +35,9 @@ import io
 
 def run_setup():
     print("Let's set up the bot now:\n")
-    token = input("Enter your token here\n>")
+    token = input("Enter your token here (DO NOT LEAVE THIS BLANK)\n>")
+    while token == "":
+        token = input("Enter your token here (DO NOT LEAVE THIS BLANK)\n>")
     prefix = input('Enter yout prefix here (If nothing is entered it will be set to "st.")\n>')
     profile_id = input("Enter your Clash Royale profile ID here (DO NOT LEAVE THIS BLANK)\n>")
     if prefix == "":
