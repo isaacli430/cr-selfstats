@@ -116,7 +116,7 @@ async def profile(ctx, tag=profile_id):
         global_ranking = data['globalRank']
     em.add_field(name="Global Rank", value=global_ranking)
     em.add_field(name="Total Donations", value=str(data['stats']['totalDonations']), inline=True)
-    em.add_field(name="Win Rate", value=f"{data['games']['wins']/data['games']['total']*100}%", inline=True)
+    em.add_field(name="Win Rate (Excluding Draws)", value=f"{data['games']['wins']/(data['games']['wins']+data['games']['losses'])*100}%", inline=True)
     em.add_field(name="Legendary Trophies", value=str(data['stats']['legendaryTrophies']), inline=True)
     em.add_field(name="Win Streak", value=str(data['games']['currentWinStreak']), inline=True)
     em.add_field(name="Arena", value=data['arena']['name'], inline=True)
