@@ -97,7 +97,7 @@ async def profile(ctx, tag=profile_id):
         return await ctx.send(embed=em)
     em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"#{data['tag']}")
     try:
-        em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badgeUrl']}")
+        em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badge']['url']}")
     except:
         em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/clanless.png")
     em.set_thumbnail(url=f"http://api.cr-api.com{data['arena']['imageURL']}")
@@ -205,8 +205,8 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
         return await ctx.send(embed=em)
 
     em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description=f"{data['description']}")
-    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge_url']}")
-    em.set_thumbnail(url=f"http://api.cr-api.com{data['badge_url']}")
+    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge']['url']}")
+    em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
     em.add_field(name="Trophies", value=str(data['score']), inline=True)
     em.add_field(name="Type", value=data['typeName'], inline=True)
     em.add_field(name="Member Count", value=f"{data['memberCount']}/50", inline=True)
