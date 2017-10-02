@@ -1,6 +1,11 @@
 # Clash Royale SelfStats
 _A selfbot dedicated to getting your CR stats!_
 
+# Installation
+## Local Installation
+Coming Soon™
+## Heroku
+Coming Soon™
 # Command Help
 This is a very simple selfbot that only has 3 commands:
 ```
@@ -23,9 +28,5 @@ st.clan GYUGPLYL player    #Returns the stats of the player GYUGPLYL's clan
 ```
 st.presence stream CR-SelfStats    #Now the user appears to be streaming, with the status message being CR-SelfStats
 ```
-
-# Installation
-## Local Installation
-Coming Soon™
-## Heroku
-Coming Soon™
+# Acknowledgements
+[@Selfish](https://github.com/selfish) and [@SML](https://github.com/smlbiobot) for creating [cr-api](https://cr-api.com)
