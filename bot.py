@@ -118,7 +118,7 @@ async def profile(ctx, tag=profile_id):
     em.add_field(name="Total Donations", value=str(data['stats']['totalDonations']), inline=True)
     em.add_field(name="Win Rate", value=f"{data['games']['wins']/data['games']['total']*100}%", inline=True)
     em.add_field(name="Legendary Trophies", value=str(data['stats']['legendaryTrophies']), inline=True)
-    em.add_field(name="Win Streak", value=str(data['stats']['currentWinStreak']), inline=True)
+    em.add_field(name="Win Streak", value=str(data['games']['currentWinStreak']), inline=True)
     em.add_field(name="Arena", value=data['arena']['name'], inline=True)
     em.add_field(name="Favorite Card", value=data['stats']['favoriteCard'].replace('_', ' ').title(), inline=True)
     em.add_field(name="Wins", value=str(data['games']['wins']), inline=True)
