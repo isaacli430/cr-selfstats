@@ -356,7 +356,7 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
     em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge']['url']}")
     em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
     for player in data['members']:
-        if player['currenRank'] == 26:
+        if player['currentRank'] == 26:
             em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
             try:
                 await ctx.send(embed=em)
