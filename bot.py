@@ -143,8 +143,19 @@ async def presence(ctx, status, *, message=None):
         emb.description = "Presence cleared."
         return await ctx.send(embed=emb)
     else:
-        emb.description = "Please enter either `online`, `idle`, `dnd`, `invisible`, or `clear`."
+        emb.description = "Please enter either `stream`, `online`, `idle`, `dnd`, `invisible`, or `clear`."
         return await ctx.send(embed=emb)
+
+    Image.new('RGB', (500, 500), color).save(file, format='PNG')
+    emb.description = "Your presence has been changed."
+    file.seek(0)
+    emb.set_author(name=status.title(), icon_url="attachment://color.png")
+    try:
+        await ctx.send(file=discord.File(file, 'color.png'), embed=emb)
+    except discord.HTTPException:
+        em_list = await embedtobox.etb(emb)
+        for page in em_list:
+            await ctx.send(page)
 
 @bot.command()
 async def clan(ctx, tag=profile_id, tag_type="clan"):
