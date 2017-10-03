@@ -395,6 +395,6 @@ async def on_command_error(ctx, exception):
         for page in pages:
             await ctx.send(page)
 try:
-    bot.run(token.strip('\"'), bot=False)
+    bot.run(token.replace('"', ''), bot=False)
 except Exception as e:
     print("Your token is invalid, please edit your token in the configs.")

@@ -28,6 +28,7 @@ git clone http://github.com/kwugfighter/cr-selfstats
 3. When that's done running, type in these commands:
 ```
 cd cr-selfstats
+python3 -m pip install -r requirements.txt
 python3 bot.py
 ```
 4. Follow the instructions from then on.
