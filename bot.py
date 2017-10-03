@@ -359,12 +359,14 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
 async def on_command_error(ctx, exception):
     command = ctx.command or ctx.invoked_subcommand
     em = discord.Embed(color=0x33ff30, title=command.name)
-    params = list(filter(lambda a: a[0] != 'ctx', command.params))
+
+    params = list(filter(lambda a: a != 'ctx', list(command.params)))
     param_str = ""
     for param in params:
-        param_str += f"<{param[0]}>"
-
+        param_str += f"<{param}>"
+        
     em.description = param_str
+
     try:
         await ctx.send(embed=em)
     except discord.Forbidden:
