@@ -5,19 +5,19 @@ _A selfbot dedicated to getting your CR stats!_
 ## Getting your token
 1. Go into Discord and Inspect Element.
 
-<p><img src="https://i.imgur.com/XeGhpvq.png", width="300px"></p>
+<p><img src="https://i.imgur.com/XeGhpvq.png", width="500px"></p>
 
 2. Go into the top bar, click the arrow, and click `Application`.
 
-<p><img src="https://i.imgur.com/lLLlN6C.png", width="300px"></p>
+<p><img src="https://i.imgur.com/lLLlN6C.png", width="500px"></p>
 
 3. Click on the arrow next to `Local Storage`, and click `https://discordapp.com`.
 
-<p><img src="https://i.imgur.com/KO2fr0a.png", width="300px"></p>
+<p><img src="https://i.imgur.com/KO2fr0a.png", width="500px"></p>
 
 4. Double click on the text box next to your token, and copy that text (This is your token).
 
-<p><img src="https://i.imgur.com/N8vkuz1.png", width="300px"></p>
+<p><img src="https://i.imgur.com/N8vkuz1.png", width="500px"></p>
 
 ## Local Installation
 1. Make sure you have Git and Python 3.6 installed on your computer. If it's your first time installing Python 3.6, go into the Python 3.6 folder, and run `Install Certificates.command`.
