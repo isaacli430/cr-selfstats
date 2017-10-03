@@ -78,6 +78,7 @@ async def prefix(bot, message):
             return json.load(f).get('PREFIX') or "st."
 
 bot = commands.Bot(command_prefix=prefix, self_bot=True)
+bot.remove_command("help")
 
 @bot.event
 async def on_ready():
@@ -277,6 +278,10 @@ async def presence(ctx, status, *, message=None):
         em_list = await embedtobox.etb(emb)
         for page in em_list:
             await ctx.send(page)
+
+@bot.command()
+async def help():
+    await ctx.send("hi")
 
 try:
     bot.run(token.strip('\"'), bot=False)
