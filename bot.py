@@ -89,7 +89,7 @@ bot.remove_command("help")
 @bot.event
 async def on_ready():
     global current_prefix
-    print(f"---------------\nBot has booted up!\nCreator: kwugfighter\nDo {current_prefix}help to get a list of commands\n--------------")
+    print(f"---------------\nBot has booted up!\nCreator: kwugfighter\n---------------\nDo {current_prefix}help to get a list of commands\n--------------")
 
 
 @bot.command()
