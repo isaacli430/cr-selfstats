@@ -87,11 +87,12 @@ async def on_ready():
 
 @bot.command()
 async def help(ctx, command=None):
-    '''Returns this page'''
+    '''Shows this message.'''
     em = discord.Embed(color=0x33ff30)
     em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     if command == None:
         em.title = "Help"
+        em.description = f"Type `{ctx.prefix}help command` for more info on a command."
         for command in bot.commands:
             if command.short_doc == "":
                 short_doc = "No Description"
@@ -119,7 +120,7 @@ async def help(ctx, command=None):
 
 @bot.command()
 async def presence(ctx, status, *, message=None):
-    '''Change your Discord status! (Stream, Online, Idle, DND, Invisible, or clear it)'''
+    '''Change your Discord status! (Stream, Online, Idle, DND, Invisible, or clear it).'''
     status = status.lower()
     emb = discord.Embed(title="Presence", color=discord.Color(value=0x33ff30))
     file = io.BytesIO()
@@ -159,7 +160,7 @@ async def presence(ctx, status, *, message=None):
 
 @bot.command()
 async def clan(ctx, tag=profile_id, tag_type="clan"):
-    '''Returns the stats of a clan'''
+    '''Returns the stats of a clan.'''
     global profile_id
     if tag == profile_id:
         tag_type = "player"
@@ -238,7 +239,7 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
 
 @bot.command(aliases=['stats', 'p', 's'])
 async def profile(ctx, tag=profile_id):
-    '''Returns the stats of a player'''
+    '''Returns the stats of a player.'''
     tag = tag.replace("#", "")
     if tag == "":
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add **PLAYER_ID** to your config vars in Heroku.")
@@ -328,7 +329,7 @@ async def profile(ctx, tag=profile_id):
 
 @bot.command()
 async def members(ctx, tag=profile_id, tag_type="clan"):
-    '''Returns the members of a clan'''
+    '''Returns the members of a clan.'''
     global profile_id
     if tag == profile_id:
         tag_type = "player"
