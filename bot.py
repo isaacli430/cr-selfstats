@@ -106,9 +106,9 @@ async def help(ctx, command=None):
             return await ctx.send(embed=em)
         em.title = command.name
         params = list(filter(lambda a: a != 'ctx', list(command.params)))
-        param_str = ""
+        param_str = "{ctx.prefix}{command.name} "
         for param in params:
-            param_str += f"<{param}>"
+            param_str += f"<{param}> "
         em.description = param_str
     try:
         await ctx.send(embed=em)
