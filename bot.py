@@ -284,7 +284,9 @@ async def help(ctx):
     em = discord.Embed(color=0x33ff30, title="Help")
     em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     for command in bot.commands:
-        em.add_field(name=command.name, value=command.short_doc)
+        if command.short_doc == "":
+            short_doc = "No Description"
+        em.add_field(name=command.name, value=short_doc)
     try:
         await ctx.send(embed=em)
     except discord.Forbidden:
