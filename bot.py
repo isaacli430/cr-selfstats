@@ -352,7 +352,27 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
     else:
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` for the tag type if necessary.")
         return await ctx.send(embed=em)
-
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description='Page 1')
+    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge']['url']}")
+    em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
+    for player in data['members']:
+        if player['currenRank'] == 26:
+            em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
+            try:
+                await ctx.send(embed=em)
+            except discord.Forbidden:
+                pages = await embedtobox.etb(em)
+                for page in pages:
+                    await ctx.send(page)
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description='Page 2')
+            em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
+        em.add_field(name=player['name'], value=f"(#{player['tag']})\nTrophies: {player['score']}\nDonations: {player['donations']}\nCrowns: {player['clanChestCrowns']}\nRole: {player['roleName']}")
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
 
 
 @bot.event
@@ -364,7 +384,7 @@ async def on_command_error(ctx, exception):
     param_str = ""
     for param in params:
         param_str += f"<{param}>"
-        
+
     em.description = param_str
 
     try:
