@@ -97,7 +97,7 @@ async def help(ctx, command=None):
                 short_doc = "No Description"
             else:
                 short_doc = command.short_doc
-            em.add_field(name=f"{ctx.prefix}{command.name}", value=short_doc)
+            em.add_field(name=f"{ctx.prefix}{command.name}", value=short_doc, inline=False)
     else:
         command = discord.utils.find(lambda c: command.lower() in c.name.lower(), bot.commands)
         if command == None:
@@ -377,6 +377,7 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
 
 @bot.event
 async def on_command_error(ctx, exception):
+    print(exception)
     command = ctx.command or ctx.invoked_subcommand
     em = discord.Embed(color=0x33ff30, title=command.name)
 
