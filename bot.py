@@ -280,9 +280,24 @@ async def presence(ctx, status, *, message=None):
             await ctx.send(page)
 
 @bot.command()
-async def help():
-    await ctx.send("hi")
+async def help(ctx):
+    em = discord.Embed(color=0x33ff30, title="Help")
+    em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+    for command in bot.commands:
+        em.add_field(name=command.name, value=command.short_doc)
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
 
+@bot.event
+async def on_command_error(ctx, exception):
+    em = discord.Embed(color=0x33ff30, title="Command Help")
+    # params = list(bot.)
+    # em.description = 
+    await ctx.send(exception)
 try:
     bot.run(token.strip('\"'), bot=False)
 except Exception as e:
