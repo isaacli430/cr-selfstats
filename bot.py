@@ -105,11 +105,10 @@ async def help(ctx, command=None):
             em.description = "That command doesn't exist."
             return await ctx.send(embed=em)
         em.title = command.name
-        params = list(filter(lambda a: a[0] != 'ctx', command.params))
+        params = list(filter(lambda a: a != 'ctx', list(command.params)))
         param_str = ""
         for param in params:
-            param_str += f"<{param[0]}>"
-
+            param_str += f"<{param}>"
         em.description = param_str
     try:
         await ctx.send(embed=em)
@@ -315,6 +314,46 @@ async def profile(ctx, tag=profile_id):
         pages = await embedtobox.etb(em)
         for page in pages:
             await ctx.send(page)
+
+@bot.command()
+async def members(ctx, tag=profile_id, tag_type="clan"):
+    '''Returns the members of a clan'''
+    global profile_id
+    if tag == profile_id:
+        tag_type = "player"
+    tag = tag.replace("#", "")
+    if tag == "":
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
+        return await ctx.send(embed=em)
+    if tag_type == "player":
+        url = f"http://api.cr-api.com/profile/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
+        if data.get("error"):
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
+            return await ctx.send(embed=em)
+        if data['clan'] == None:
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Player is not in a clan.")
+            return await ctx.send(embed=em)
+        tag = data['clan']['tag']
+        url = f"http://api.cr-api.com/clan/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
+    elif tag_type == "clan":
+        url = f"http://api.cr-api.com/clan/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()      
+        if data.get("error"):
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
+            return await ctx.send(embed=em) 
+    else:
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` for the tag type if necessary.")
+        return await ctx.send(embed=em)
+
+
 
 @bot.event
 async def on_command_error(ctx, exception):
