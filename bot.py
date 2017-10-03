@@ -286,6 +286,8 @@ async def help(ctx):
     for command in bot.commands:
         if command.short_doc == "":
             short_doc = "No Description"
+        else:
+            short_doc = command.short_doc
         em.add_field(name=command.name, value=short_doc)
     try:
         await ctx.send(embed=em)
