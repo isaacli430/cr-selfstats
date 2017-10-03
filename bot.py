@@ -69,12 +69,6 @@ else:
     with open("data/config.json") as f:
         profile_id = json.load(f).get('PROFILE_ID')
 
-if heroku == True:
-    prefix = os.environ["PREFIX"] or "st."
-else:
-    with open("data/config.json") as f:
-        prefix = json.load(f).get('PREFIX') or "st."
-
 def prefix(bot, message):
     if heroku == True:
         return os.environ["PREFIX"] or "st."
@@ -82,13 +76,14 @@ def prefix(bot, message):
         with open("data/config.json") as f:
             return json.load(f).get('PREFIX') or "st."
 
+
 bot = commands.Bot(command_prefix=prefix, self_bot=True)
 bot.remove_command("help")
 
 @bot.event
 async def on_ready():
     global prefix
-    print(f"---------------\nBot has booted up!\nCreator: kwugfighter\nDo {prefix}help to get a list of commands\n--------------")
+    print(f"---------------\nBot has booted up!\nCreator: kwugfighter\nDo {prefix.name}help to get a list of commands\n--------------")
 
 
 @bot.command()
