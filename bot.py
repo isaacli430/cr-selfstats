@@ -84,8 +84,136 @@ bot.remove_command("help")
 async def on_ready():
     print("---------------\nBot has booted up!\nCreator: kwugfighter\n--------------")
 
+
+@bot.command()
+async def help(ctx):
+    '''Returns this page'''
+    em = discord.Embed(color=0x33ff30, title="Help")
+    em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+    for command in bot.commands:
+        if command.short_doc == "":
+            short_doc = "No Description"
+        else:
+            short_doc = command.short_doc
+        em.add_field(name=f"{ctx.prefix}{command.name}", value=short_doc)
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
+
+@bot.command()
+async def presence(ctx, status, *, message=None):
+    '''Change your Discord status! (Stream, Online, Idle, DND, Invisible, or clear it)'''
+    status = status.lower()
+    emb = discord.Embed(title="Presence", color=discord.Color(value=0x33ff30))
+    file = io.BytesIO()
+    if status == "online":
+        await bot.change_presence(status=discord.Status.online, game=discord.Game(name=message), afk=True)
+        color = discord.Color(value=0x43b581).to_rgb()
+    elif status == "idle":
+        await bot.change_presence(status=discord.Status.idle, game=discord.Game(name=message), afk=True)
+        color = discord.Color(value=0xfaa61a).to_rgb()
+    elif status == "dnd":
+        await bot.change_presence(status=discord.Status.dnd, game=discord.Game(name=message), afk=True)
+        color = discord.Color(value=0xf04747).to_rgb()
+    elif status == "invis" or status == "invisible":
+        await bot.change_presence(status=discord.Status.invisible, game=discord.Game(name=message), afk=True)
+        color = discord.Color(value=0x747f8d).to_rgb()
+    elif status == "stream":
+        await bot.change_presence(status=discord.Status.online, game=discord.Game(name=message,type=1,url=f'https://www.twitch.tv/{message}'), afk=True)
+        color = discord.Color(value=0x593695).to_rgb()
+    elif status == "clear":
+        await bot.change_presence(game=None, afk=True)
+        emb.description = "Presence cleared."
+        return await ctx.send(embed=emb)
+    else:
+        emb.description = "Please enter either `online`, `idle`, `dnd`, `invisible`, or `clear`."
+        return await ctx.send(embed=emb)
+
+@bot.command()
+async def clan(ctx, tag=profile_id, tag_type="clan"):
+    '''Returns the stats of a clan'''
+    global profile_id
+    if tag == profile_id:
+        tag_type = "player"
+    tag = tag.replace("#", "")
+    if tag == "":
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
+        return await ctx.send(embed=em)
+    if tag_type == "player":
+        url = f"http://api.cr-api.com/profile/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
+        if data.get("error"):
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
+            return await ctx.send(embed=em)
+        if data['clan'] == None:
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Player is not in a clan.")
+            return await ctx.send(embed=em)
+        tag = data['clan']['tag']
+        url = f"http://api.cr-api.com/clan/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
+    elif tag_type == "clan":
+        url = f"http://api.cr-api.com/clan/{tag}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()      
+        if data.get("error"):
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
+            return await ctx.send(embed=em) 
+    else:
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` for the tag type if necessary.")
+        return await ctx.send(embed=em)
+
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description=f"{data['description']}")
+    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge']['url']}")
+    em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
+    em.add_field(name="Trophies", value=str(data['score']), inline=True)
+    em.add_field(name="Type", value=data['typeName'], inline=True)
+    em.add_field(name="Member Count", value=f"{data['memberCount']}/50", inline=True)
+    em.add_field(name="Requirement", value=str(data['requiredScore']), inline=True)
+    em.add_field(name="Donations", value=str(data['donations']), inline=True)
+    em.add_field(name="Region", value=data['region']['name'])
+    players = []
+    for i in range(len(data['members'])):
+        if i <= 2:
+            players.append(f"{data['members'][i]['name']}: {data['members'][i]['trophies']}\n(#{data['members'][i]['tag']})")
+    em.add_field(name="Top 3 Players", value="\n\n".join(players), inline=True)
+    contributors = sorted(data['members'], key=lambda x: x['clanChestCrowns'])
+    contributors = list(reversed(contributors))
+    players = []
+    for i in range(len(data['members'])):
+        if i <= 2:
+            players.append(f"{contributors[i]['name']}: {contributors[i]['clanChestCrowns']}\n(#{contributors[i]['tag']})")
+    em.add_field(name="Top CC Contributors", value='\n\n'.join(players), inline=True)
+    em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
+
+    Image.new('RGB', (500, 500), color).save(file, format='PNG')
+    emb.description = "Your presence has been changed."
+    file.seek(0)
+    emb.set_author(name=status.title(), icon_url="attachment://color.png")
+    try:
+        await ctx.send(file=discord.File(file, 'color.png'), embed=emb)
+    except discord.HTTPException:
+        em_list = await embedtobox.etb(emb)
+        for page in em_list:
+            await ctx.send(page)
+
+
 @bot.command(aliases=['stats', 'p', 's'])
 async def profile(ctx, tag=profile_id):
+    '''Returns the stats of a player'''
     tag = tag.replace("#", "")
     if tag == "":
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add **PLAYER_ID** to your config vars in Heroku.")
@@ -173,135 +301,22 @@ async def profile(ctx, tag=profile_id):
         for page in pages:
             await ctx.send(page)
 
-@bot.command()
-async def clan(ctx, tag=profile_id, tag_type="clan"):
-    global profile_id
-    if tag == profile_id:
-        tag_type = "player"
-    tag = tag.replace("#", "")
-    if tag == "":
-        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
-        return await ctx.send(embed=em)
-    if tag_type == "player":
-        url = f"http://api.cr-api.com/profile/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()
-        if data.get("error"):
-            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
-            return await ctx.send(embed=em)
-        if data['clan'] == None:
-            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Player is not in a clan.")
-            return await ctx.send(embed=em)
-        tag = data['clan']['tag']
-        url = f"http://api.cr-api.com/clan/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()
-    elif tag_type == "clan":
-        url = f"http://api.cr-api.com/clan/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()      
-        if data.get("error"):
-            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
-            return await ctx.send(embed=em) 
-    else:
-        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` for the tag type if necessary.")
-        return await ctx.send(embed=em)
-
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description=f"{data['description']}")
-    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge']['url']}")
-    em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
-    em.add_field(name="Trophies", value=str(data['score']), inline=True)
-    em.add_field(name="Type", value=data['typeName'], inline=True)
-    em.add_field(name="Member Count", value=f"{data['memberCount']}/50", inline=True)
-    em.add_field(name="Requirement", value=str(data['requiredScore']), inline=True)
-    em.add_field(name="Donations", value=str(data['donations']), inline=True)
-    em.add_field(name="Region", value=data['region']['name'])
-    players = []
-    for i in range(len(data['members'])):
-        if i <= 2:
-            players.append(f"{data['members'][i]['name']}: {data['members'][i]['trophies']}\n(#{data['members'][i]['tag']})")
-    em.add_field(name="Top 3 Players", value="\n\n".join(players), inline=True)
-    contributors = sorted(data['members'], key=lambda x: x['clanChestCrowns'])
-    contributors = list(reversed(contributors))
-    players = []
-    for i in range(len(data['members'])):
-        if i <= 2:
-            players.append(f"{contributors[i]['name']}: {contributors[i]['clanChestCrowns']}\n(#{contributors[i]['tag']})")
-    em.add_field(name="Top CC Contributors", value='\n\n'.join(players), inline=True)
-    em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
-    try:
-        await ctx.send(embed=em)
-    except discord.Forbidden:
-        pages = await embedtobox.etb(em)
-        for page in pages:
-            await ctx.send(page)
-
-@bot.command()
-async def presence(ctx, status, *, message=None):
-    '''Change your Discord status! (Stream, Online, Idle, DND, Invisible, or clear it)'''
-    status = status.lower()
-    emb = discord.Embed(title="Presence", color=discord.Color(value=0x33ff30))
-    file = io.BytesIO()
-    if status == "online":
-        await bot.change_presence(status=discord.Status.online, game=discord.Game(name=message), afk=True)
-        color = discord.Color(value=0x43b581).to_rgb()
-    elif status == "idle":
-        await bot.change_presence(status=discord.Status.idle, game=discord.Game(name=message), afk=True)
-        color = discord.Color(value=0xfaa61a).to_rgb()
-    elif status == "dnd":
-        await bot.change_presence(status=discord.Status.dnd, game=discord.Game(name=message), afk=True)
-        color = discord.Color(value=0xf04747).to_rgb()
-    elif status == "invis" or status == "invisible":
-        await bot.change_presence(status=discord.Status.invisible, game=discord.Game(name=message), afk=True)
-        color = discord.Color(value=0x747f8d).to_rgb()
-    elif status == "stream":
-        await bot.change_presence(status=discord.Status.online, game=discord.Game(name=message,type=1,url=f'https://www.twitch.tv/{message}'), afk=True)
-        color = discord.Color(value=0x593695).to_rgb()
-    elif status == "clear":
-        await bot.change_presence(game=None, afk=True)
-        emb.description = "Presence cleared."
-        return await ctx.send(embed=emb)
-    else:
-        emb.description = "Please enter either `online`, `idle`, `dnd`, `invisible`, or `clear`."
-        return await ctx.send(embed=emb)
-
-    Image.new('RGB', (500, 500), color).save(file, format='PNG')
-    emb.description = "Your presence has been changed."
-    file.seek(0)
-    emb.set_author(name=status.title(), icon_url="attachment://color.png")
-    try:
-        await ctx.send(file=discord.File(file, 'color.png'), embed=emb)
-    except discord.HTTPException:
-        em_list = await embedtobox.etb(emb)
-        for page in em_list:
-            await ctx.send(page)
-
-@bot.command()
-async def help(ctx):
-    em = discord.Embed(color=0x33ff30, title="Help")
-    em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-    for command in bot.commands:
-        if command.short_doc == "":
-            short_doc = "No Description"
-        else:
-            short_doc = command.short_doc
-        em.add_field(name=command.name, value=short_doc)
-    try:
-        await ctx.send(embed=em)
-    except discord.Forbidden:
-        pages = await embedtobox.etb(em)
-        for page in pages:
-            await ctx.send(page)
-
 @bot.event
 async def on_command_error(ctx, exception):
     em = discord.Embed(color=0x33ff30, title="Command Help")
-    # params = list(bot.)
-    # em.description = 
-    await ctx.send(exception)
+    command = ctx.command or ctx.invoked_subcommand
+    params = list(filter(lambda a: a[0] != 'ctx', command.params))
+    param_str = ""
+    for param in params:
+        param_str += f"<{param[0]}>"
+
+    em.description = param_str
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
 try:
     bot.run(token.strip('\"'), bot=False)
 except Exception as e:
