@@ -86,16 +86,31 @@ async def on_ready():
 
 
 @bot.command()
-async def help(ctx):
+async def help(ctx, command=None):
     '''Returns this page'''
-    em = discord.Embed(color=0x33ff30, title="Help")
+    em = discord.Embed(color=0x33ff30)
     em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-    for command in bot.commands:
-        if command.short_doc == "":
-            short_doc = "No Description"
-        else:
-            short_doc = command.short_doc
-        em.add_field(name=f"{ctx.prefix}{command.name}", value=short_doc)
+    if command == None:
+        em.title = "Help"
+        for command in bot.commands:
+            if command.short_doc == "":
+                short_doc = "No Description"
+            else:
+                short_doc = command.short_doc
+            em.add_field(name=f"{ctx.prefix}{command.name}", value=short_doc)
+    else:
+        command = discord.utils.find(lambda c: command.lower() in c.name.lower(), bot.commands)
+        if command == None:
+            em.title = "Command Help"
+            em.description = "That command doesn't exist."
+            return await ctx.send(embed=em)
+        em.title = command.name
+        params = list(filter(lambda a: a[0] != 'ctx', command.params))
+        param_str = ""
+        for param in params:
+            param_str += f"<{param[0]}>"
+
+        em.description = param_str
     try:
         await ctx.send(embed=em)
     except discord.Forbidden:
@@ -303,8 +318,8 @@ async def profile(ctx, tag=profile_id):
 
 @bot.event
 async def on_command_error(ctx, exception):
-    em = discord.Embed(color=0x33ff30, title="Command Help")
     command = ctx.command or ctx.invoked_subcommand
+    em = discord.Embed(color=0x33ff30, title=command.name)
     params = list(filter(lambda a: a[0] != 'ctx', command.params))
     param_str = ""
     for param in params:
