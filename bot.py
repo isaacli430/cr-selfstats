@@ -106,6 +106,7 @@ async def help(ctx, command=None):
             else:
                 short_doc = command.short_doc
             em.add_field(name=f"{ctx.prefix}{command.name}", value=short_doc, inline=False)
+            em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     else:
         command = discord.utils.find(lambda c: command.lower() in c.name.lower(), bot.commands)
         if command == None:
@@ -159,6 +160,7 @@ async def presence(ctx, status, *, message=None):
     emb.description = "Your presence has been changed."
     file.seek(0)
     emb.set_author(name=status.title(), icon_url="attachment://color.png")
+    emb.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
         await ctx.send(file=discord.File(file, 'color.png'), embed=emb)
     except discord.HTTPException:
@@ -376,6 +378,7 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description='Page 2')
             em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
         em.add_field(name=player['name'], value=f"(#{player['tag']})\nTrophies: {player['score']}\nDonations: {player['donations']}\nCrowns: {player['clanChestCrowns']}\nRole: {player['roleName']}")
+    em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
         await ctx.send(embed=em)
     except discord.Forbidden:
