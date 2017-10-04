@@ -232,17 +232,6 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
         for page in pages:
             await ctx.send(page)
 
-    Image.new('RGB', (500, 500), color).save(file, format='PNG')
-    emb.description = "Your presence has been changed."
-    file.seek(0)
-    emb.set_author(name=status.title(), icon_url="attachment://color.png")
-    try:
-        await ctx.send(file=discord.File(file, 'color.png'), embed=emb)
-    except discord.HTTPException:
-        em_list = await embedtobox.etb(emb)
-        for page in em_list:
-            await ctx.send(page)
-
 
 @bot.command(aliases=['stats', 'p', 's'])
 async def profile(ctx, tag=profile_id):
