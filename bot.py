@@ -391,10 +391,10 @@ async def on_command_error(ctx, exception):
     em = discord.Embed(color=0x33ff30, title=command.name)
 
     params = list(filter(lambda a: a != 'ctx', list(command.params)))
-    param_str = f"{ctx.prefix}{command.name} "
+    param_str = f"Usage: `{ctx.prefix}{command.name} "
     for param in params:
         param_str += f"<{param}> "
-
+    param_str += "`"
     em.description = param_str
 
     try:
