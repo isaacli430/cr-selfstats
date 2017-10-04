@@ -40,7 +40,7 @@ python3 bot.py
 
 <p><img src="https://i.imgur.com/1vjMymh.png", width="500px"></p>
 
-4. Create a Python app in Heroku.
+4. Create an app in Heroku.
 
 <p><img src="https://i.imgur.com/gDhfELr.png", width="500px"></p>
 
