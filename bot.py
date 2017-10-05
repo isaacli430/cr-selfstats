@@ -410,7 +410,7 @@ async def chests(ctx, tag=profile_id):
     cycle_pos = data['chestCycle']['position']%len(chest)
     chest_list = [i for i in chest if chest.index(i) in range(148, 159)]
     print(cycle_pos)
-    return print(chest_list)
+    return print(chest)
     try:
         supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']+1
     except:
