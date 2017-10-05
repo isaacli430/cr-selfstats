@@ -168,7 +168,7 @@ async def presence(ctx, status, *, message=None):
         for page in em_list:
             await ctx.send(page)
 
-@bot.command()
+@bot.command(aliases=['cl'])
 async def clan(ctx, tag=profile_id, tag_type="clan"):
     '''Returns the stats of a clan.'''
     global profile_id
@@ -269,9 +269,9 @@ async def profile(ctx, tag=profile_id):
         global_ranking = data['globalRank']
     em.add_field(name="Global Rank", value=global_ranking)
     em.add_field(name="Total Donations", value=str(data['stats']['totalDonations']), inline=True)
-    em.add_field(name="Win Rate (Excluding Draws)", value=f"{data['games']['wins']/(data['games']['wins']+data['games']['losses'])*100}%", inline=True)
+    em.add_field(name="Win Rate (Excluding Draws)", value=f"{round(data['games']['wins']/(data['games']['wins']+data['games']['losses'])*100, 2)}%", inline=True)
     em.add_field(name="Legendary Trophies", value=str(data['stats']['legendaryTrophies']), inline=True)
-    em.add_field(name="Win Streak", value=str(data['games']['currentWinStreak']), inline=True)
+    em.add_field(name="Max Challenge Wins", value=str(data['stats']['challengeMaxWins']), inline=True)
     em.add_field(name="Arena", value=data['arena']['name'], inline=True)
     em.add_field(name="Favorite Card", value=data['stats']['favoriteCard'].replace('_', ' ').title(), inline=True)
     em.add_field(name="Wins", value=str(data['games']['wins']), inline=True)
@@ -291,15 +291,15 @@ async def profile(ctx, tag=profile_id):
     except:
         em.add_field(name="Season Results", value=f"Season Finish: N/A\nSeason Highest: N/A\nGlobal Rank: N/A", inline=True)
     try:
-        supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']
+        supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']+1
     except:
         supermag = "N/A"
     try:
-        leggie = data['chestCycle']['legendaryPos']-data['chestCycle']['position']
+        leggie = data['chestCycle']['legendaryPos']-data['chestCycle']['position']+1
     except:
         leggie = "N/A"
     try:
-        epic = data['chestCycle']['epicPos']-data['chestCycle']['position']
+        epic = data['chestCycle']['epicPos']-data['chestCycle']['position']+1
     except:
         epic = "N/A"
     em.add_field(name="Upcoming Chests", value=f"Super Magical: {supermag}\nLegendary: {leggie}\nEpic: {epic}", inline=True)
@@ -326,7 +326,7 @@ async def profile(ctx, tag=profile_id):
         for page in pages:
             await ctx.send(page)
 
-@bot.command()
+@bot.command(aliases=['m'])
 async def members(ctx, tag=profile_id, tag_type="clan"):
     '''Returns the members of a clan.'''
     global profile_id
@@ -385,6 +385,26 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
         pages = await embedtobox.etb(em)
         for page in pages:
             await ctx.send(page)
+
+@bot.command(aliases=['ch'])
+async def chests(ctx, tag=profile_id):
+    '''Get a mini version of a player's chest cycle.'''
+    tag = tag.replace("#", "")
+    if tag == "":
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add **PLAYER_ID** to your config vars in Heroku.")
+        return await ctx.send(embed=em)
+    url = f"http://api.cr-api.com/profile/{tag}"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as d:
+            data = await d.json()
+    if data.get("error"):
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
+        return await ctx.send(embed=em)
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']}'s Chest Cycle", description=f"#{data['tag']}")
+    with open('data/chests.json') as c:
+        chest = c.json()
+    await ctx.send(chest[0])
+
 
 
 @bot.event
