@@ -400,10 +400,48 @@ async def chests(ctx, tag=profile_id):
     if data.get("error"):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
         return await ctx.send(embed=em)
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']}'s Chest Cycle", description=f"#{data['tag']}")
+    try:
+        em.set_author(name="Chest Cycle", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badge']['url']}")
+    except:
+        em.set_author(name="Chest Cycle", url=f"http://cr-api.com/profile/{tag}", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/clanless.png")
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"#{data['tag']}")
     with open('data/chests.json') as c:
         chest = json.load(c)
-    await ctx.send(chest[0])
+    cycle_pos = data['chestCycle']['position']%len(chest)
+    chest_list = [for i in chest if chest.index(i) is in range(cycle_pos+1, cycle_pos+12)]
+    try:
+        supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']+1
+    except:
+        supermag = "N/A"
+    try:
+        leggie = data['chestCycle']['legendaryPos']-data['chestCycle']['position']+1
+    except:
+        leggie = "N/A"
+    try:
+        epic = data['chestCycle']['epicPos']-data['chestCycle']['position']+1
+    except:
+        epic = "N/A"
+    try:
+        chest_list[supermag-1] = "Super Magical"
+    except:
+        pass
+    try:
+        chest_list[leggie-1] = "Legendary"
+    except:
+        pass
+    try:
+        chest_list[epic-1] = "Epic"
+    except:
+        pass
+
+    em.add_field(name="Chest Cycle", value="\n".join(chest_list))
+    em.add_field(name="Special Chests", value=f"Super Magical: {supermag}\nLegendary: {leggie}\nEpic: {epic}")
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
 
 
 
