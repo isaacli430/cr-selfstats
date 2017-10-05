@@ -269,7 +269,7 @@ async def profile(ctx, tag=profile_id):
         global_ranking = data['globalRank']
     em.add_field(name="Global Rank", value=global_ranking)
     em.add_field(name="Total Donations", value=str(data['stats']['totalDonations']), inline=True)
-    em.add_field(name="Win Rate (Excluding Draws)", value=f"{round(data['games']['wins']/(data['games']['wins']+data['games']['losses'])*100, 2)}%", inline=True)
+    em.add_field(name="Win-Loss", value=f"{round(data['games']['wins']/(data['games']['wins']+data['games']['losses'])*100, 2)}%", inline=True)
     em.add_field(name="Legendary Trophies", value=str(data['stats']['legendaryTrophies']), inline=True)
     em.add_field(name="Max Challenge Wins", value=str(data['stats']['challengeMaxWins']), inline=True)
     em.add_field(name="Arena", value=data['arena']['name'], inline=True)
@@ -402,7 +402,7 @@ async def chests(ctx, tag=profile_id):
         return await ctx.send(embed=em)
     em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']}'s Chest Cycle", description=f"#{data['tag']}")
     with open('data/chests.json') as c:
-        chest = c.json()
+        chest = json.load(c)
     await ctx.send(chest[0])
 
 
