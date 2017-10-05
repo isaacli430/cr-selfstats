@@ -407,10 +407,11 @@ async def chests(ctx, tag=profile_id):
         em.set_author(name="Chest Cycle", url=f"http://cr-api.com/profile/{tag}", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/clanless.png")
     with open('data/chests.json') as c:
         chest = json.load(c)
+    chest = list(chest)
     cycle_pos = data['chestCycle']['position']%len(chest)
     chest_list = [i for i in chest if chest.index(i) in range(148, 159)]
     print(cycle_pos)
-    return print(chest)
+    return print(chest_list)
     try:
         supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']+1
     except:
