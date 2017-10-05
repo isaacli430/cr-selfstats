@@ -408,7 +408,7 @@ async def chests(ctx, tag=profile_id):
     with open('data/chests.json') as c:
         chest = json.load(c)
     cycle_pos = data['chestCycle']['position']%len(chest)
-    chest_list = [i for i in chest if chest.index(i) in range(cycle_pos+1, cycle_pos+12)]
+    chest_list = [i for i in chest if chest.index(i) in range(148, 159)]
     print(cycle_pos)
     return print(chest_list)
     try:
