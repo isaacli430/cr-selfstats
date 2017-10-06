@@ -114,11 +114,11 @@ async def help(ctx, command=None):
             em.description = "That command doesn't exist."
             return await ctx.send(embed=em)
         params = list(filter(lambda a: a != 'ctx', list(command.params)))
-        param_str = f"Usage: `{ctx.prefix}{command.name} "
+        param_str = f"``Usage:`` `{ctx.prefix}{command.name} "
         for param in params:
             param_str += f"<{param}> "
         param_str += "`"
-        em.title = f"`` {param_str} ``"
+        em.title = param_str
     try:
         await ctx.send(embed=em)
     except discord.Forbidden:
@@ -454,11 +454,11 @@ async def on_command_error(ctx, exception):
     em = discord.Embed(color=0x33ff30)
 
     params = list(filter(lambda a: a != 'ctx', list(command.params)))
-    param_str = f"Usage: `{ctx.prefix}{command.name} "
+    param_str = f"``Usage:`` `{ctx.prefix}{command.name} "
     for param in params:
         param_str += f"<{param}> "
     param_str += "`"
-    em.title = f"``{param_str}``"
+    em.title = param_str
 
     try:
         await ctx.send(embed=em)
