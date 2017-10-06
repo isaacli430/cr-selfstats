@@ -83,7 +83,7 @@ else:
         current_prefix = json.load(f).get('PREFIX') or "st."
 
 
-bot = commands.Bot(command_prefix=prefix, self_bot=True, session=aiohttp.ClientSession(loop=self.loop))
+bot = commands.Bot(command_prefix=prefix, self_bot=True, session=aiohttp.ClientSession())
 bot.remove_command("help")
 
 @bot.event
