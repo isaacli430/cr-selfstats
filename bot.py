@@ -113,13 +113,12 @@ async def help(ctx, command=None):
             em.title = "Command Help"
             em.description = "That command doesn't exist."
             return await ctx.send(embed=em)
-        em.title = command.name
         params = list(filter(lambda a: a != 'ctx', list(command.params)))
         param_str = f"Usage: `{ctx.prefix}{command.name} "
         for param in params:
             param_str += f"<{param}> "
         param_str += "`"
-        em.description = param_str
+        em.title = f"``{param_str}``"
     try:
         await ctx.send(embed=em)
     except discord.Forbidden:
@@ -452,14 +451,14 @@ async def chests(ctx, tag=profile_id):
 async def on_command_error(ctx, exception):
     print(exception)
     command = ctx.command or ctx.invoked_subcommand
-    em = discord.Embed(color=0x33ff30, title=command.name)
+    em = discord.Embed(color=0x33ff30)
 
     params = list(filter(lambda a: a != 'ctx', list(command.params)))
     param_str = f"Usage: `{ctx.prefix}{command.name} "
     for param in params:
         param_str += f"<{param}> "
     param_str += "`"
-    em.description = param_str
+    em.title = f"``{param_str}``"
 
     try:
         await ctx.send(embed=em)
