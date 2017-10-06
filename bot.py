@@ -196,9 +196,8 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
                 data = await d.json()
     elif tag_type == "clan":
         url = f"http://api.cr-api.com/clan/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()      
+        async with bot.session.get(url) as d:
+            data = await d.json()      
         if data.get("error"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
             return await ctx.send(embed=em) 
