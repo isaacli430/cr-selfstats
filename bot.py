@@ -407,8 +407,8 @@ async def chests(ctx, tag=profile_id):
     with open('data/chests.json') as c:
         chest = json.load(c)
     cycle_pos = data['chestCycle']['position']%len(chest)
-    chest_list = [chest[x] for x in range(cycle_pos, cycle_pos+10)]
-    if len(chest_list) != 10:
+    chest_list = [chest[x] for x in range(cycle_pos, cycle_pos+30)]
+    if len(chest_list) != 30:
         chest_listp2 = [chest[x] for x in range(10-len(chest_list))]
         chest_list += chest_listp2
     try:
