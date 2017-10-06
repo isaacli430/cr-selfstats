@@ -83,7 +83,7 @@ else:
         current_prefix = json.load(f).get('PREFIX') or "st."
 
 
-bot = commands.Bot(command_prefix=prefix, self_bot=True, session=aiohttp.ClientSession())
+bot = commands.Bot(command_prefix=prefix, self_bot=True)
 bot.remove_command("help")
 
 @bot.event
@@ -180,8 +180,9 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
         return await ctx.send(embed=em)
     if tag_type == "player":
         url = f"http://api.cr-api.com/profile/{tag}"
-        async with bot.session.get(url) as d:
-            data = await d.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
         if data.get("error"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
             return await ctx.send(embed=em)
@@ -190,12 +191,14 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
             return await ctx.send(embed=em)
         tag = data['clan']['tag']
         url = f"http://api.cr-api.com/clan/{tag}"
-        async with bot.session.get(url) as d:
-            data = await d.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
     elif tag_type == "clan":
         url = f"http://api.cr-api.com/clan/{tag}"
-        async with bot.session.get(url) as d:
-            data = await d.json()      
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()      
         if data.get("error"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
             return await ctx.send(embed=em) 
@@ -241,8 +244,9 @@ async def profile(ctx, tag=profile_id):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
     url = f"http://api.cr-api.com/profile/{tag}"
-    async with bot.session.get(url) as d:
-        data = await d.json()
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as d:
+            data = await d.json()
     if data.get("error"):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
         return await ctx.send(embed=em)
@@ -334,8 +338,9 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
         return await ctx.send(embed=em)
     if tag_type == "player":
         url = f"http://api.cr-api.com/profile/{tag}"
-        async with bot.session.get(url) as d:
-            data = await d.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
         if data.get("error"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
             return await ctx.send(embed=em)
@@ -344,12 +349,14 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
             return await ctx.send(embed=em)
         tag = data['clan']['tag']
         url = f"http://api.cr-api.com/clan/{tag}"
-        async with bot.session.get(url) as d:
-            data = await d.json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()
     elif tag_type == "clan":
         url = f"http://api.cr-api.com/clan/{tag}"
-        async with bot.session.get(url) as d:
-            data = await d.json()      
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as d:
+                data = await d.json()      
         if data.get("error"):
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
             return await ctx.send(embed=em) 
@@ -387,8 +394,9 @@ async def chests(ctx, tag=profile_id):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
     url = f"http://api.cr-api.com/profile/{tag}"
-    async with bot.session.get(url) as d:
-        data = await d.json()
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as d:
+            data = await d.json()
     if data.get("error"):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
         return await ctx.send(embed=em)
