@@ -96,8 +96,8 @@ async def on_ready():
 async def help(ctx, command=None):
     '''Shows this message.'''
     em = discord.Embed(color=0x33ff30)
-    em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     if command == None:
+        em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
         em.title = "``Help``"
         em.description = f"Type `{ctx.prefix}help command` for more info on a command."
         for command in bot.commands:
@@ -118,7 +118,7 @@ async def help(ctx, command=None):
         for param in params:
             param_str += f"<{param}> "
         param_str += "`"
-        em.title = f"``{param_str}``"
+        em.title = f"`` {param_str} ``"
     try:
         await ctx.send(embed=em)
     except discord.Forbidden:
