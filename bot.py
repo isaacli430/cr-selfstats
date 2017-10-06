@@ -98,7 +98,7 @@ async def help(ctx, command=None):
     em = discord.Embed(color=0x33ff30)
     em.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
     if command == None:
-        em.title = "Help"
+        em.title = "``Help``"
         em.description = f"Type `{ctx.prefix}help command` for more info on a command."
         for command in bot.commands:
             if command.short_doc == "":
