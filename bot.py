@@ -447,6 +447,7 @@ async def chests(ctx, tag=profile_id):
 
 @bot.command(aliases=['card'])
 async def cardinfo(ctx, *, card : str):
+    '''Return a card's info'''
     em = discord.Embed(color=0x33ff30)
     card = card.replace(' ', '-').lower()
     if card == "elixir-pump" or card == "pump":
