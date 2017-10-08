@@ -849,6 +849,6 @@
             "description": "The Master Builder has sent his first contraption to the Arena! It's a fast and fun flying machine, but fragile!",
             "arena": 9,
             "elixirCost": 4
-        },
+        }
     ]
 }

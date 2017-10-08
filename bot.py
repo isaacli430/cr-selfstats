@@ -446,7 +446,7 @@ async def chests(ctx, tag=profile_id):
             await ctx.send(page)
 
 @bot.command(aliases=['card'])
-async def cardinfo(ctx, *, card):
+async def cardinfo(ctx, *, card : str):
     em = discord.Embed(color=0x33ff30)
     card = card.replace(' ', '-').lower()
     if card == "elixir-pump" or card == "pump":
