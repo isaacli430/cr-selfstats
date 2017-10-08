@@ -445,7 +445,25 @@ async def chests(ctx, tag=profile_id):
         for page in pages:
             await ctx.send(page)
 
-
+@bot.command(aliases=['card'])
+async def cardinfo(ctx, *, card):
+    em = discord.Embed(color=0x33ff30)
+    card = card.replace(' ', '-').lower()
+    if card == "elixir-pump" or card == "pump":
+        card == 'elixir-collector'
+    with open('data/cards.json') as c:
+        cardj = json.load(c)
+    found_card = None
+    for test_card in cardj['cards']:
+        if card == test_card['idName']:
+            found_card = test_card
+    if found_card == None:
+        em.title = "Card Info"
+        em.description = "This card does not exist, please try again."
+        return await ctx.send(embed=em)
+    em.set_author(name="Card Info", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards_ui/{found_card['idName']}.png")
+    em.title = found_card['name']
+    await ctx.send(embed=em)
 
 @bot.event
 async def on_command_error(ctx, exception):
