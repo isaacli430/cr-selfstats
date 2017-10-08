@@ -463,10 +463,7 @@ async def cardinfo(ctx, *, card : str):
         return await ctx.send(embed=em)
     em.set_author(name="Card Info", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards_ui/{found_card['idName']}.png")
     em.title = found_card['name']
-    try:
-        em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards/{found_card['idName']}.png")
-    except:
-        em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards_ui/{found_card['idName']}.png")
+    em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards/{found_card['idName']}.png")
     em.description = found_card['description']
     em.add_field(name="Rarity", value=found_card['rarity'])
     em.add_field(name="Found In", value=f"Arena {found_card['arena']}")
