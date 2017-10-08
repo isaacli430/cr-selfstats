@@ -450,7 +450,7 @@ async def cardinfo(ctx, *, card : str):
     em = discord.Embed(color=0x33ff30)
     card = card.replace(' ', '-').lower()
     if card == "elixir-pump" or card == "pump":
-        card == 'elixir-collector'
+        card = 'elixir-collector'
     with open('data/cards.json') as c:
         cardj = json.load(c)
     found_card = None
