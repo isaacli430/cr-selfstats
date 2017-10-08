@@ -451,6 +451,8 @@ async def cardinfo(ctx, *, card : str):
     card = card.replace(' ', '-').lower()
     if card == "elixir-pump" or card == "pump":
         card = 'elixir-collector'
+    if card == "log":
+        card = 'the-log'
     with open('data/cards.json') as c:
         cardj = json.load(c)
     found_card = None
