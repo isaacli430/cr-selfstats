@@ -465,7 +465,7 @@ async def cardinfo(ctx, *, card : str):
     em.title = found_card['name']
     try:
         em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards/{found_card['idName']}.png")
-    else:
+    except:
         em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards_ui/{found_card['idName']}.png")
     em.description = found_card['description']
     em.add_field(name="Rarity", value=found_card['rarity'])
