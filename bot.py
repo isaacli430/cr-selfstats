@@ -463,7 +463,21 @@ async def cardinfo(ctx, *, card : str):
         return await ctx.send(embed=em)
     em.set_author(name="Card Info", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards_ui/{found_card['idName']}.png")
     em.title = found_card['name']
-    await ctx.send(embed=em)
+    try:
+        em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards/{found_card['idName']}.png")
+    else:
+        em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards_ui/{found_card['idName']}.png")
+    em.description = found_card['description']
+    em.add_field(name="Rarity", value=found_card['rarity'])
+    em.add_field(name="Found In", value=f"Arena {found_card['arena']}")
+    em.add_field(name="Card Type", value=found_card['type'])
+    em.add_field(name="Elixir Cost", value=found_card['elixirCost'])
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
 
 @bot.event
 async def on_command_error(ctx, exception):
