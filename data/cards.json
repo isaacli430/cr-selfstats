@@ -842,7 +842,7 @@
             "elixirCost": 3
         },
         {
-            "idName": "flying-machine",
+            "idName": "fly-machine",
             "rarity": "Rare",
             "type": "Troop",
             "name": "Flying Machine",
