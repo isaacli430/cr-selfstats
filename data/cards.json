@@ -687,7 +687,7 @@
             "rarity": "Common",
             "type": "Troop",
             "name": "Bats",
-            "description": "Five tiny flying creatures with big ears. Having big ears doesn't mean they'll listen when asked to stop attacking you.",
+            "description": "Spawns a handful of tiny flying creatures with big ears. Having big ears doesn't mean they're good listeners.",
             "arena": 8,
             "elixirCost": 2,
             "order": 63,
