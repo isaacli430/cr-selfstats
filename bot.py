@@ -457,7 +457,7 @@ async def cardinfo(ctx, *, card : str):
     with open('data/cards.json') as c:
         cardj = json.load(c)
     found_card = None
-    for test_card in cardj['cards']:
+    for test_card in cardj:
         if card == test_card['idName']:
             found_card = test_card
     if found_card == None:
