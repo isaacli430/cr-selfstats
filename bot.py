@@ -464,12 +464,16 @@ async def cardinfo(ctx, *, card : str):
         em.title = "Card Info"
         em.description = "This card does not exist, please try again."
         return await ctx.send(embed=em)
-    em.set_author(name="Card Info", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/card_ui/{found_card['idName']}.png")
+    em.set_author(name="Card Info", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/card_ui/{found_card['key']}.png")
     em.title = found_card['name']
-    em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards/{found_card['idName']}.png")
+    em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards/{found_card['key']}.png")
     em.description = found_card['description']
     em.add_field(name="Rarity", value=found_card['rarity'])
-    em.add_field(name="Found In", value=f"Arena {found_card['arena']}")
+    if found_card['arena'] == 0:
+        arena = 'Training Camp'
+    else:
+        arena = f"Arena {found_card['arena']}"
+    em.add_field(name="Found In", value=arena)
     em.add_field(name="Card Type", value=found_card['type'])
     em.add_field(name="Elixir Cost", value=found_card['elixirCost'])
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
