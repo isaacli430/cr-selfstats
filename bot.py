@@ -472,7 +472,7 @@ async def cardinfo(ctx, *, card : str):
     em.add_field(name="Found In", value=f"Arena {found_card['arena']}")
     em.add_field(name="Card Type", value=found_card['type'])
     em.add_field(name="Elixir Cost", value=found_card['elixirCost'])
-    em.set_footer(text="Selfbot made by kwugfighter")
+    em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
         await ctx.send(embed=em)
     except discord.Forbidden:
