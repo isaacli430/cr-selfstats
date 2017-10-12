@@ -454,11 +454,12 @@ async def cardinfo(ctx, *, card : str):
         card = 'elixir-collector'
     if card == "log":
         card = 'the-log'
+    if card == 'x-bow':
+        card = 'xbow'
     with open('data/cards.json') as c:
         cardj = json.load(c)
     found_card = None
     for test_card in cardj['cards']:
-        print(test_card)
         if card == test_card['key']:
             found_card = test_card
     if found_card == None:
