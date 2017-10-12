@@ -458,6 +458,7 @@ async def cardinfo(ctx, *, card : str):
         cardj = json.load(c)
     found_card = None
     for test_card in cardj['cards']:
+        print(test_card)
         if card == test_card['key']:
             found_card = test_card
     if found_card == None:
