@@ -454,8 +454,6 @@ async def cardinfo(ctx, *, card : str):
         card = 'elixir-collector'
     if card == "log":
         card = 'the-log'
-    if card == 'flying-machine':
-        card = 'fly-machine'
     with open('data/cards.json') as c:
         cardj = json.load(c)
     found_card = None
@@ -466,7 +464,7 @@ async def cardinfo(ctx, *, card : str):
         em.title = "Card Info"
         em.description = "This card does not exist, please try again."
         return await ctx.send(embed=em)
-    em.set_author(name="Card Info", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards_ui/{found_card['idName']}.png")
+    em.set_author(name="Card Info", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/card_ui/{found_card['idName']}.png")
     em.title = found_card['name']
     em.set_thumbnail(url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/cards/{found_card['idName']}.png")
     em.description = found_card['description']
