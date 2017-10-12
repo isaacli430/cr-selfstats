@@ -477,7 +477,7 @@ async def cardinfo(ctx, *, card : str):
         arena = f"Arena {found_card['arena']}"
     em.add_field(name="Found In", value=arena)
     em.add_field(name="Card Type", value=found_card['type'])
-    em.add_field(name="Elixir Cost", value=found_card['elixirCost'])
+    em.add_field(name="Elixir Cost", value=found_card['elixir'])
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
         await ctx.send(embed=em)
