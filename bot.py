@@ -515,7 +515,7 @@ async def sharedeck(ctx, *, deck: str):
         em.set_author(name="Copy Deck Here", url=url, icon_url=ctx.author.avatar_url)
     except Exception as e:
         print(e)
-        print(deck[0])
+        print(deck)
         em.description = "You need to have 8 cards in your deck."
         return await ctx.send(embed=em)
     em.description = ', '.join([card['name'] for card in deck])
