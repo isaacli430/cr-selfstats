@@ -513,7 +513,7 @@ async def sharedeck(ctx, *, deck: str):
             return await ctx.send(embed=em)
     try:
         url = f"https://link.clashroyale.com/deck/en?deck={new_deck[0]['decklink']};{new_deck[1]['decklink']};{new_deck[2]['decklink']};{new_deck[3]['decklink']};{new_deck[4]['decklink']};{new_deck[5]['decklink']};{new_deck[6]['decklink']};{new_deck[7]['decklink']}&id=iOS"
-        em.set_author(name="Copy Deck Here", url=url, icon_url=ctx.author.avatar_url)
+        em.set_author(name="Click Here to Copy Deck", url=url, icon_url=ctx.author.avatar_url)
     except:
         em.description = "You need to have 8 cards in your deck."
         return await ctx.send(embed=em)
