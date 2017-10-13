@@ -30,7 +30,10 @@ async def etb(emb):
         else:
             emb_str += f"<{emb.author.name}>\n\n"
     if emb.title:
-        emb_str += f"<{emb.title}>\n"
+        if emb.url:
+            emb_str += f"<{emb.title}>({emb.url})\n"
+        else:
+            emb_str += f"<{emb.title}>\n"
     if emb.description:
         if len(f"{emb_str}{emb.description}\n```")>2000:
             emb_str += "```"
