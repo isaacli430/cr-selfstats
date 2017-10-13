@@ -487,7 +487,7 @@ async def cardinfo(ctx, *, card : str):
             await ctx.send(page)
 
 @bot.command(aliases=['deck'])
-async def share_deck(ctx, *, deck: str):
+async def sharedeck(ctx, *, deck: str):
     '''Share a deck through URL! Make sure you split up each card with `|`'''
     em = discord.Embed(color=0x33ff30, title='Share a deck!')
     deck = deck.split("|")
@@ -495,6 +495,7 @@ async def share_deck(ctx, *, deck: str):
     with open('data/cards.json') as c:
         cardj = json.load(c)
     for card in deck:
+        card = card.replace(' ', '-').lower()
         if card == "elixir-pump" or card == "pump":
             card = 'elixir-collector'
         if card == "log":
