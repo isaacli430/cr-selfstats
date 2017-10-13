@@ -494,6 +494,7 @@ async def sharedeck(ctx, *, deck: str):
     deck = [card.strip() for card in deck]
     with open('data/cards.json') as c:
         cardj = json.load(c)
+    new_deck = []
     for card in deck:
         found_card = False
         card = card.replace(' ', '-').lower()
@@ -505,20 +506,18 @@ async def sharedeck(ctx, *, deck: str):
             card = 'xbow'
         for test_card in cardj['cards']:
             if card == test_card['key']:
-                card = test_card
+                new_deck.append(test_card)
                 found_card = True
         if not found_card:
             em.description = 'One of your cards does not exist.'
             return await ctx.send(embed=em)
     try:
-        url = f"https://link.clashroyale.com/deck/en?deck={deck[0]['decklink']};{deck[1]['decklink']};{deck[2]['decklink']};{deck[3]['decklink']};{deck[4]['decklink']};{deck[5]['decklink']};{deck[6]['decklink']};{deck[7]['decklink']}&id=iOS"
+        url = f"https://link.clashroyale.com/deck/en?deck={new_deck[0]['decklink']};{new_deck[1]['decklink']};{new_deck[2]['decklink']};{new_deck[3]['decklink']};{new_deck[4]['decklink']};{new_deck[5]['decklink']};{new_deck[6]['decklink']};{new_deck[7]['decklink']}&id=iOS"
         em.set_author(name="Copy Deck Here", url=url, icon_url=ctx.author.avatar_url)
-    except Exception as e:
-        print(e)
-        print(deck)
+    except:
         em.description = "You need to have 8 cards in your deck."
         return await ctx.send(embed=em)
-    em.description = ', '.join([card['name'] for card in deck])
+    em.description = ', '.join([card['name'] for card in new_deck])
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
         await ctx.send(embed=em)
