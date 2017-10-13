@@ -486,6 +486,39 @@ async def cardinfo(ctx, *, card : str):
         for page in pages:
             await ctx.send(page)
 
+@bot.command(aliases=['deck'])
+async def share_deck(ctx, *, deck: str):
+    '''Share a deck through URL! Make sure you split up each card with `|`'''
+    em = discord.Embed(color=0x33ff30, title='Share a deck!')
+    deck = deck.split("|")
+    deck = [card.strip() for card in deck]
+    with open('data/cards.json') as c:
+        cardj = json.load(c)
+    for card in deck:
+        if card == "elixir-pump" or card == "pump":
+            card = 'elixir-collector'
+        if card == "log":
+            card = 'the-log'
+        if card == 'x-bow':
+            card = 'xbow'
+        for test_card in cardj['cards']:
+            if card != test_card['key']:
+                em.description = 'One of your cards does not exist.'
+                return await ctx.send(embed=em)
+            else:
+                card = test_card
+    url = f"https://link.clashroyale.com/deck/en?deck={deck[0]['decklink']};{deck[1]['decklink']};{deck[2]['decklink']};{deck[3]['decklink']};{deck[4]['decklink']};{deck[5]['decklink']};{deck[6]['decklink']};{deck[7]['decklink']}&id=iOS"
+    em.set_author(name="Copy Deck Here", url=url, icon_url=ctx.author.avatar_url)
+    em.description = ', '.join([card['name'] for card in deck])
+    em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
+    try:
+        await ctx.send(embed=em)
+    except discord.Forbidden:
+        pages = await embedtobox.etb(em)
+        for page in pages:
+            await ctx.send(page)
+
+
 @bot.event
 async def on_command_error(ctx, exception):
     print(exception)

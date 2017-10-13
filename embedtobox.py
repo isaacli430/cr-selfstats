@@ -25,7 +25,10 @@ async def etb(emb):
     emb_str = "```md\n"
     emb_list = []
     if emb.author:
-        emb_str += f"<{emb.author.name}>\n\n"
+        if emb.author.url:
+            emb_str += f"<{emb.author.name}>({emb.author.url})\n\n"
+        else:
+            emb_str += f"<{emb.author.name}>\n\n"
     if emb.title:
         emb_str += f"<{emb.title}>\n"
     if emb.description:
