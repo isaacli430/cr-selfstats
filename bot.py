@@ -503,6 +503,7 @@ async def sharedeck(ctx, *, deck: str):
             card = 'the-log'
         if card == 'x-bow':
             card = 'xbow'
+        print(card)
         for test_card in cardj['cards']:
             if card == test_card['key']:
                 card = test_card
