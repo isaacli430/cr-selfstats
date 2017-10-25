@@ -273,7 +273,10 @@ async def profile(ctx, tag=profile_id):
         em.add_field(name="Total Donations", value="N/A", inline=True)
     em.add_field(name="Win-Loss", value=f"{round(data['games']['wins']/(data['games']['wins']+data['games']['losses'])*100, 2)}%", inline=True)
     em.add_field(name="Legendary Trophies", value=str(data['stats']['legendaryTrophies']), inline=True)
-    em.add_field(name="Max Challenge Wins", value=str(data['stats']['challengeMaxWins']), inline=True)
+    try:
+        em.add_field(name="Max Challenge Wins", value=str(data['stats']['challengeMaxWins']), inline=True)
+    except:
+        em.add_field(name="Max Challenge Wins", value="N/A", inline=True)
     em.add_field(name="Arena", value=data['arena']['name'], inline=True)
     em.add_field(name="Favorite Card", value=data['stats']['favoriteCard'].replace('_', ' ').title(), inline=True)
     em.add_field(name="Wins", value=str(data['games']['wins']), inline=True)
