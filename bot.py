@@ -373,35 +373,32 @@ async def chests(ctx, tag=profile_id):
     if tag == "":
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
-    url = f"http://api.cr-api.com/profile/{tag}"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as d:
-            data = await d.json()
-    if data.get("error"):
+    profile = cr_py.Profile(tag)
+    if not profile.exists:
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
         return await ctx.send(embed=em)
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"#{data['tag']}")
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=profile.name, description=f"#{profile.tag}")
     try:
-        em.set_author(name="Chest Cycle", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badge']['url']}")
+        em.set_author(name="Chest Cycle", url=f"http://cr-api.com/profile/{tag}", icon_url=profile.clan.badge_url)
     except:
         em.set_author(name="Chest Cycle", url=f"http://cr-api.com/profile/{tag}", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/clanless.png")
-    with open('data/chests.json') as c:
-        chest = json.load(c)
-    cycle_pos = data['chestCycle']['position']%len(chest)
+    constants = cr_py.Constants()
+    chest = constants.chest_cycle
+    cycle_pos = profile.cycles.chest_pos%len(chest)
     chest_list = [chest[x] for x in range(cycle_pos, cycle_pos+30)]
     if len(chest_list) != 30:
         chest_listp2 = [chest[x] for x in range(10-len(chest_list))]
         chest_list += chest_listp2
     try:
-        supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']+1
+        supermag = profile.cycles.smc_pos-profile.cycles.chest_pos+1
     except:
         supermag = "N/A"
     try:
-        leggie = data['chestCycle']['legendaryPos']-data['chestCycle']['position']+1
+        leggie = profile.cycles.smc_pos-profile.cycles.chest_pos+1
     except:
         leggie = "N/A"
     try:
-        epic = data['chestCycle']['epicPos']-data['chestCycle']['position']+1
+        epic = profile.cycles.epic_pos-profile.cycles.chest_pos+1
     except:
         epic = "N/A"
     try:
