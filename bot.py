@@ -196,7 +196,7 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` for the tag type if necessary.")
         return await ctx.send(embed=em)
 
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{clan.name} (#{clan.tag})", description=f"{data['description']}")
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{clan.name} (#{clan.tag})", description=f"{clan.description}")
     em.set_author(name="Clan", url=f"http://cr-api.com/clan/{clan.tag}", icon_url=clan.badge_url)
     em.set_thumbnail(url=clan.badge_url)
     em.add_field(name="Trophies", value=str(clan.trophies.current), inline=True)
@@ -213,7 +213,7 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
     contributors = sorted(clan.members, key=lambda x: x.crowns)
     contributors = list(reversed(contributors))
     players = []
-    for i in range(len(data['members'])):
+    for i in range(clan.member_count):
         if i <= 2:
             players.append(f"{contributors[i].name}: {contributors[i].crowns}\n(#{contributors[i].tag})")
     em.add_field(name="Top CC Contributors", value='\n\n'.join(players), inline=True)
@@ -294,15 +294,15 @@ async def profile(ctx, tag=profile_id):
         epic = "N/A"
     em.add_field(name="Upcoming Chests", value=f"Super Magical: {supermag}\nLegendary: {leggie}\nEpic: {epic}", inline=True)
     deck = f"{profile.deck[0][0].name}: Lvl {profile.deck[0][1]}"
-    for i in range(1,len(data['currentDeck'])):
+    for i in range(1,len(profile.deck)):
         deck += f"\n{profile.deck[i][0].name}: Lvl {profile.deck[i][1]}"
     em.add_field(name="Battle Deck", value=deck, inline=True)
     offers = ""
-    if data['shopOffers']['legendary'] > 0:
+    if profile.cycles.leg_shop > 0:
         offers += f"Legendary Chest: {profile.cycles.leg_shop} days\n"
-    if data['shopOffers']['epic'] > 0:
+    if profile.cycles.epic_shop > 0:
         offers += f"Epic Chest: {profile.cycles.epic_shop} days\n"
-    if data['shopOffers']['arena'] != None:
+    if profile.cycles.arena_shop != None:
         offers += f"Arena Pack: {profile.cycles.arena_shop} days"
     if offers == "":
         offers = "None"
