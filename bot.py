@@ -31,6 +31,7 @@ import json
 import aiohttp
 import embedtobox
 import io
+import cr_py
 
 def run_setup():
     print("Let's set up the bot now:\n")
@@ -178,53 +179,43 @@ async def clan(ctx, tag=profile_id, tag_type="clan"):
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
     if tag_type == "player":
-        url = f"http://api.cr-api.com/profile/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()
-        if data.get("error"):
+        profile = cr_py.Profile(tag)
+        if not profile.exists:
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
             return await ctx.send(embed=em)
-        if data['clan'] == None:
+        if profile.clan == None:
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Player is not in a clan.")
             return await ctx.send(embed=em)
-        tag = data['clan']['tag']
-        url = f"http://api.cr-api.com/clan/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()
+        clan = cr_py.Clan(profile.clan.tag)
     elif tag_type == "clan":
-        url = f"http://api.cr-api.com/clan/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()      
-        if data.get("error"):
+        clan = cr_py.Clan(tag)  
+        if not clan.exists:
             em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
             return await ctx.send(embed=em) 
     else:
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` for the tag type if necessary.")
         return await ctx.send(embed=em)
 
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description=f"{data['description']}")
-    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge']['url']}")
-    em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
-    em.add_field(name="Trophies", value=str(data['score']), inline=True)
-    em.add_field(name="Type", value=data['typeName'], inline=True)
-    em.add_field(name="Member Count", value=f"{data['memberCount']}/50", inline=True)
-    em.add_field(name="Requirement", value=str(data['requiredScore']), inline=True)
-    em.add_field(name="Donations", value=str(data['donations']), inline=True)
-    em.add_field(name="Region", value=data['region']['name'])
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{clan.name} (#{clan.tag})", description=f"{data['description']}")
+    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{clan.tag}", icon_url=clan.badge_url)
+    em.set_thumbnail(url=clan.badge_url)
+    em.add_field(name="Trophies", value=str(clan.trophies.current), inline=True)
+    em.add_field(name="Type", value=clan.type, inline=True)
+    em.add_field(name="Member Count", value=f"{clan.member_count}/50", inline=True)
+    em.add_field(name="Requirement", value=str(clan.trophies.requirement), inline=True)
+    em.add_field(name="Donations", value=str(clan.donations), inline=True)
+    em.add_field(name="Region", value=clan.region)
     players = []
-    for i in range(len(data['members'])):
+    for i in range(clan.member_count):
         if i <= 2:
-            players.append(f"{data['members'][i]['name']}: {data['members'][i]['trophies']}\n(#{data['members'][i]['tag']})")
+            players.append(f"{clan.members[i].name}: {clan.members[i].trophies}\n(#{clan.members[i].tag})")
     em.add_field(name="Top 3 Players", value="\n\n".join(players), inline=True)
-    contributors = sorted(data['members'], key=lambda x: x['clanChestCrowns'])
+    contributors = sorted(clan.members, key=lambda x: x.crowns)
     contributors = list(reversed(contributors))
     players = []
     for i in range(len(data['members'])):
         if i <= 2:
-            players.append(f"{contributors[i]['name']}: {contributors[i]['clanChestCrowns']}\n(#{contributors[i]['tag']})")
+            players.append(f"{contributors[i].name}: {contributors[i].crowns}\n(#{contributors[i].tag})")
     em.add_field(name="Top CC Contributors", value='\n\n'.join(players), inline=True)
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
@@ -242,83 +233,77 @@ async def profile(ctx, tag=profile_id):
     if tag == "":
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
-    url = f"http://api.cr-api.com/profile/{tag}"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as d:
-            data = await d.json()
-    if data.get("error"):
+    profile = cr_py.Profile(tag)
+    if not profile.exists:
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Profile", description="That's an invalid Player ID.")
         return await ctx.send(embed=em)
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=data['name'], description=f"#{data['tag']}")
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=profile.name, description=f"#{profile.tag}")
     try:
-        em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"http://api.cr-api.com{data['clan']['badge']['url']}")
+        em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=profile.clan.badge_url)
     except:
         em.set_author(name="Profile", url=f"http://cr-api.com/profile/{tag}", icon_url=f"https://raw.githubusercontent.com/kwugfighter/cr-selfstats/master/data/clanless.png")
-    em.set_thumbnail(url=f"http://api.cr-api.com{data['arena']['imageURL']}")
-    if data['experience']['xpRequiredForLevelUp'] == "Max":
+    em.set_thumbnail(url=profile.arena.img_url)
+    if profile.xp.required == "Max":
         to_level_up = "(Max Level)"
     else:
-        to_level_up = f"({data['experience']['xp']}/{data['experience']['xpRequiredForLevelUp']})"
-    em.add_field(name="Trophies", value=str(data['trophies']), inline=True)
-    em.add_field(name="Personal Best", value=str(data['stats']['maxTrophies']), inline=True)
-    em.add_field(name="Level", value=f"{data['experience']['level']} {to_level_up}", inline=True)
-    if data['globalRank'] == None:
-        global_ranking = "N/A"
-    else:
-        global_ranking = data['globalRank']
+        to_level_up = f"({profile.xp.current}/{profile.xp.required})"
+    em.add_field(name="Trophies", value=str(profile.trophies.current), inline=True)
+    em.add_field(name="Personal Best", value=str(profile.trophies.record), inline=True)
+    em.add_field(name="Level", value=f"{profile.level} {to_level_up}", inline=True)
+    global_ranking = profile.global_rank or "N/A"
     em.add_field(name="Global Rank", value=global_ranking)
     try:
-        em.add_field(name="Total Donations", value=str(data['stats']['totalDonations']), inline=True)
+        em.add_field(name="Total Donations", value=str(profile.total_donations), inline=True)
     except:
         em.add_field(name="Total Donations", value="N/A", inline=True)
-    em.add_field(name="Win-Loss", value=f"{round(data['games']['wins']/(data['games']['wins']+data['games']['losses'])*100, 2)}%", inline=True)
-    em.add_field(name="Legendary Trophies", value=str(data['stats']['legendaryTrophies']), inline=True)
+    em.add_field(name="Win-Loss", value=f"{round(profile.games.wins/(profile.games.wins+profile.games.losses)*100, 2)}%", inline=True)
+    em.add_field(name="Legendary Trophies", value=str(profile.trophies.legendary), inline=True)
     try:
-        em.add_field(name="Max Challenge Wins", value=str(data['stats']['challengeMaxWins']), inline=True)
+        em.add_field(name="Max Challenge Wins", value=str(profile.challenge_record), inline=True)
     except:
         em.add_field(name="Max Challenge Wins", value="N/A", inline=True)
-    em.add_field(name="Arena", value=data['arena']['name'], inline=True)
-    em.add_field(name="Favorite Card", value=data['stats']['favoriteCard'].replace('_', ' ').title(), inline=True)
-    em.add_field(name="Wins", value=str(data['games']['wins']), inline=True)
-    em.add_field(name="Losses", value=str(data['games']['losses']), inline=True)
-    em.add_field(name="Draws", value=str(data['games']['draws']), inline=True)
+    em.add_field(name="Arena", value=profile.arena.name, inline=True)
+    em.add_field(name="Favorite Card", value=profile.cards.favorite.name, inline=True)
+    em.add_field(name="Wins", value=str(profile.games.wins), inline=True)
+    em.add_field(name="Losses", value=str(profile.games.losses), inline=True)
+    em.add_field(name="Draws", value=str(profile.games.draws), inline=True)
     try:
-        em.add_field(name="Clan Info", value=f"{data['clan']['name']}\n(#{data['clan']['tag']})\n{data['clan']['role']}", inline=True)
+        em.add_field(name="Clan Info", value=f"{profile.clan.name}\n(#{profile.clan.tag})\n{profile.data['clan']['role']}", inline=True)
     except:
         em.add_field(name="Clan Info", value=f"N/A", inline=True)
 
     try:
-        if data['previousSeasons'][0]['seasonEndGlobalRank'] == None:
+        if profile.seasons[0].global_ranking == None:
             ranking = "N/A"
         else:
-            ranking = data['previousSeasons'][0]['seasonEndGlobalRank'] + "trophies"
-        em.add_field(name="Season Results", value=f"Season Finish: {data['previousSeasons'][0]['seasonEnding']}\nSeason Highest: {data['previousSeasons'][0]['seasonHighest']}\nGlobal Rank: {ranking}", inline=True)
+            ranking = profile.seasons[0].global_ranking + "trophies"
+        em.add_field(name="Season Results", value=f"Season Finish: {profile.seasons[0].finish}\nSeason Highest: {profile.seasons[0].highest}\nGlobal Rank: {ranking}", inline=True)
     except:
         em.add_field(name="Season Results", value=f"Season Finish: N/A\nSeason Highest: N/A\nGlobal Rank: N/A", inline=True)
     try:
-        supermag = data['chestCycle']['superMagicalPos']-data['chestCycle']['position']+1
+        supermag = profile.cycles.smc_pos-profile.cycles.chest_pos+1
     except:
         supermag = "N/A"
     try:
-        leggie = data['chestCycle']['legendaryPos']-data['chestCycle']['position']+1
+        leggie = profile.cycles.leg_pos-profile.cycles.chest_pos+1
     except:
         leggie = "N/A"
     try:
-        epic = data['chestCycle']['epicPos']-data['chestCycle']['position']+1
+        epic = profile.cycles.epic_pos-profile.cycles.chest_pos+1
     except:
         epic = "N/A"
     em.add_field(name="Upcoming Chests", value=f"Super Magical: {supermag}\nLegendary: {leggie}\nEpic: {epic}", inline=True)
-    deck = f"{data['currentDeck'][0]['name'].replace('_', ' ').title()}: Lvl {data['currentDeck'][0]['level']}"
+    deck = f"{profile.deck[0][0].name}: Lvl {profile.deck[0][1]}"
     for i in range(1,len(data['currentDeck'])):
-        deck += f"\n{data['currentDeck'][i]['name'].replace('_', ' ').title()}: Lvl {data['currentDeck'][i]['level']}"
+        deck += f"\n{profile.deck[i][0].name}: Lvl {profile.deck[i][1]}"
     em.add_field(name="Battle Deck", value=deck, inline=True)
     offers = ""
     if data['shopOffers']['legendary'] > 0:
-        offers += f"Legendary Chest: {data['shopOffers']['legendary']} days\n"
+        offers += f"Legendary Chest: {profile.cycles.leg_shop} days\n"
     if data['shopOffers']['epic'] > 0:
-        offers += f"Epic Chest: {data['shopOffers']['epic']} days\n"
+        offers += f"Epic Chest: {profile.cycles.epic_shop} days\n"
     if data['shopOffers']['arena'] != None:
-        offers += f"Arena Pack: {data['shopOffers']['arena']} days"
+        offers += f"Arena Pack: {profile.cycles.arena_shop} days"
     if offers == "":
         offers = "None"
     em.add_field(name="Shop Offers", value=offers, inline=True)
@@ -338,40 +323,30 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
     if tag == profile_id:
         tag_type = "player"
     tag = tag.replace("#", "")
-    if tag == "":
-        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please add **PLAYER_ID** to your config vars in Heroku.")
+        if tag == "":
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan Members", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
     if tag_type == "player":
-        url = f"http://api.cr-api.com/profile/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()
-        if data.get("error"):
-            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Player ID.")
+        profile = cr_py.Profile(tag)
+        if not profile.exists:
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan Members", description="Invalid Player ID.")
             return await ctx.send(embed=em)
-        if data['clan'] == None:
-            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Player is not in a clan.")
+        if profile.clan == None:
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan Members", description="Player is not in a clan.")
             return await ctx.send(embed=em)
-        tag = data['clan']['tag']
-        url = f"http://api.cr-api.com/clan/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()
+        clan = cr_py.Clan(profile.clan.tag)
     elif tag_type == "clan":
-        url = f"http://api.cr-api.com/clan/{tag}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as d:
-                data = await d.json()      
-        if data.get("error"):
-            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Invalid Clan ID.")
+        clan = cr_py.Clan(tag)  
+        if not clan.exists:
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan Members", description="Invalid Clan ID.")
             return await ctx.send(embed=em) 
     else:
-        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan", description="Please only enter `player` for the tag type if necessary.")
+        em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan Members", description="Please only enter `player` for the tag type if necessary.")
         return await ctx.send(embed=em)
-    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description='Page 1')
-    em.set_author(name="Clan", url=f"http://cr-api.com/clan/{tag}", icon_url=f"http://api.cr-api.com{data['badge']['url']}")
-    em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
-    for player in data['members']:
+    em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{clan.name} (#{tag})", description='Page 1')
+    em.set_author(name="Clan Members", url=f"http://cr-api.com/clan/{tag}", icon_url=clan.badge_url)
+    em.set_thumbnail(url=clan.badge_url)
+    for player in clan.members:
         if player['currentRank'] == 26:
             em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
             try:
@@ -380,9 +355,9 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
                 pages = await embedtobox.etb(em)
                 for page in pages:
                     await ctx.send(page)
-            em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{data['name']} (#{tag})", description='Page 2')
-            em.set_thumbnail(url=f"http://api.cr-api.com{data['badge']['url']}")
-        em.add_field(name=player['name'], value=f"(#{player['tag']})\nTrophies: {player['score']}\nDonations: {player['donations']}\nCrowns: {player['clanChestCrowns']}\nRole: {player['roleName']}")
+            em = discord.Embed(color=discord.Color(value=0x33ff30), title=f"{clan.name} (#{tag})", description='Page 2')
+            em.set_thumbnail(url=clan.badge_url)
+        em.add_field(name=player['name'], value=f"(#{player.tag})\nTrophies: {player.trophies}\nDonations: {player.donations}\nCrowns: {player.crowns}\nRole: {player.role}")
     em.set_footer(text="Selfbot made by kwugfighter | Powered by cr-api", icon_url="http://cr-api.com/static/img/branding/cr-api-logo.png")
     try:
         await ctx.send(embed=em)
