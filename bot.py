@@ -323,7 +323,7 @@ async def members(ctx, tag=profile_id, tag_type="clan"):
     if tag == profile_id:
         tag_type = "player"
     tag = tag.replace("#", "")
-        if tag == "":
+    if tag == "":
         em = discord.Embed(color=discord.Color(value=0x33ff30), title="Clan Members", description="Please add **PLAYER_ID** to your config vars in Heroku.")
         return await ctx.send(embed=em)
     if tag_type == "player":
